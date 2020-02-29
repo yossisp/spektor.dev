@@ -1,7 +1,7 @@
 ---
-title: "The King of All Bugs: Apollo React Client + Cookie Authentication + SNI"
+title: "The King of All Bugs: Cookie-based Authentication + Apollo React Client + SNI"
 date: "2020-02-29T19:19:03.284Z"
-description: "I recently was given a task to add authentication to our website..."
+description: "I recently was given a task to add authentication to our website."
 ---
 
 This is my first post on my new fake blog! How exciting!

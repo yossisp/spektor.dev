@@ -53,15 +53,14 @@ const Bio = () => {
           borderRadius: `50%`,
         }}
       />
-      <Span maxWidth={["none", 300]}>
-        <Span crossed>Show</Span>
-        Blog about nothing by
+      <Span maxWidth={300}>
+        A blog about nothing by
         {` `}
         <a href={`https://twitter.com/${social.twitter}`}>
           <Span bold>{author.name}</Span>.
         </a>
         {` `}
-        Curb your enthusiasm before reading.
+        Proudly coronavirus-free since 1888.
       </Span>
     </Flex>
   )
