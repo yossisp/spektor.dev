@@ -62,3 +62,16 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
     })
   }
 }
+
+exports.onCreateWebpackConfig = ({ actions }) => {
+  actions.setWebpackConfig({
+    resolve: {
+      alias: {
+        theme: path.resolve(__dirname, "./src/theme"),
+        components: path.resolve(__dirname, "./src/components"),
+        utils: path.resolve(__dirname, "./src/utils"),
+        system: path.resolve(__dirname, "./src/system"),
+      },
+    },
+  })
+}
