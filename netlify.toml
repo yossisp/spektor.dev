@@ -1,0 +1,5 @@
+[[redirects]]
+from = "https://spektordev.netlify.com/*"
+to = "https://www.spektor.dev/:splat"
+status = 301
+force = true
