@@ -3,10 +3,10 @@ module.exports = {
     title: `Spektor.dev`,
     author: {
       name: `Yossi Spektor`,
-      summary: `who has a blog about development in Javascript.`,
+      summary: `about software development.`,
     },
     description: `The blog is about interesting bugs I came across and tips that I would like to share.`,
-    siteUrl: `https://gatsby-starter-blog-demo.netlify.com/`,
+    siteUrl: `https://www.spektor.dev`,
     social: {
       twitter: `SpektorYossi`,
     },
@@ -60,13 +60,13 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `Gatsby Starter Blog`,
-        short_name: `GatsbyJS`,
+        name: `Spektor.dev Blog`,
+        short_name: `Spektor.dev`,
         start_url: `/`,
         background_color: `#ffffff`,
         theme_color: `#663399`,
         display: `minimal-ui`,
-        icon: `content/assets/gatsby-icon.png`,
+        icon: `content/assets/favicon/android-chrome-512x512.png`,
       },
     },
     `gatsby-plugin-react-helmet`,
