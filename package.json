@@ -1,11 +1,11 @@
 {
-  "name": "gatsby-starter-blog",
+  "name": "spektor.dev",
   "private": true,
-  "description": "A starter for a blog powered by Gatsby and Markdown",
-  "version": "0.1.0",
-  "author": "Kyle Mathews <mathews.kyle@gmail.com>",
+  "description": "Spektor.dev",
+  "version": "1.0.0",
+  "author": "Yossi Spektor <easpex@gmail.com>",
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/yossisp/spektor.dev/issues"
   },
   "dependencies": {
     "gatsby": "^2.19.7",
