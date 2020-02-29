@@ -1,3 +1,10 @@
 import styled from "styled-components"
-import { flexbox } from "styled-system"
-import { Link } from "gatsby"
+import { shadoq } from "styled-system"
+import { Link as GatsbyLink } from "gatsby"
+
+const Link = styled(GatsbyLink)`
+  box-shadow: none;
+`
+Link.displayName = "StyledLink"
+
+export default Link

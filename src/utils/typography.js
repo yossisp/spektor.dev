@@ -9,9 +9,6 @@ Wordpress2016.overrideThemeStyles = () => {
     a: {
       color: "#ee7b1d",
     },
-    h1: {
-      fontSize: "14px",
-    },
   }
 }
 

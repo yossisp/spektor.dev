@@ -1,7 +1,7 @@
 import React from "react"
-import { Link } from "gatsby"
 import { ThemeProvider } from "styled-components"
 import { theme } from "theme"
+import { Link } from "system"
 
 import { rhythm, scale } from "../utils/typography"
 
@@ -19,11 +19,11 @@ const Layout = ({ location, title, children }) => {
         }}
       >
         <Link
-          style={{
-            boxShadow: `none`,
-            textDecoration: `none`,
-            color: `inherit`,
-          }}
+          // style={{
+          //   boxShadow: `none`,
+          //   textDecoration: `none`,
+          //   color: `inherit`,
+          // }}
           to={`/`}
         >
           {title}
@@ -39,11 +39,11 @@ const Layout = ({ location, title, children }) => {
         }}
       >
         <Link
-          style={{
-            boxShadow: `none`,
-            textDecoration: `none`,
-            color: `inherit`,
-          }}
+          // style={{
+          //   boxShadow: `none`,
+          //   textDecoration: `none`,
+          //   color: `inherit`,
+          // }}
           to={`/`}
         >
           {title}
