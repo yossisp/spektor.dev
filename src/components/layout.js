@@ -45,9 +45,7 @@ const Layout = ({ location, title, children }) => {
         }}
       >
         <header>{header}</header>
-        <main>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
-        </main>
+        <main>{children}</main>
         <footer>
           <a href={`https://twitter.com/SpektorYossi`}>
             <strong>twitter</strong>
