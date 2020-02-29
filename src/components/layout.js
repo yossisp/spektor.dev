@@ -1,5 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
+import { ThemeProvider } from "styled-components"
+import { theme } from "theme"
 
 import { rhythm, scale } from "../utils/typography"
 
@@ -11,7 +13,7 @@ const Layout = ({ location, title, children }) => {
     header = (
       <h1
         style={{
-          ...scale(1.5),
+          ...scale(0.75),
           marginBottom: rhythm(1.5),
           marginTop: 0,
         }}
@@ -50,22 +52,26 @@ const Layout = ({ location, title, children }) => {
     )
   }
   return (
-    <div
-      style={{
-        marginLeft: `auto`,
-        marginRight: `auto`,
-        maxWidth: rhythm(24),
-        padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
-      }}
-    >
-      <header>{header}</header>
-      <main>{children}</main>
-      <footer>
-        © {new Date().getFullYear()}, Built with
-        {` `}
-        <a href="https://www.gatsbyjs.org">Gatsby</a>
-      </footer>
-    </div>
+    <ThemeProvider theme={theme}>
+      <div
+        style={{
+          marginLeft: `auto`,
+          marginRight: `auto`,
+          maxWidth: rhythm(24),
+          padding: `${rhythm(1.5)} ${rhythm(3 / 4)}`,
+        }}
+      >
+        <header>{header}</header>
+        <main>
+          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        </main>
+        <footer>
+          <a href={`https://twitter.com/SpektorYossi`}>
+            <strong>twitter</strong>
+          </a>
+        </footer>
+      </div>
+    </ThemeProvider>
   )
 }
 

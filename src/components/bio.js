@@ -8,6 +8,7 @@
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import Image from "gatsby-image"
+import { Flex } from "system"
 
 import { rhythm } from "../utils/typography"
 
@@ -37,12 +38,7 @@ const Bio = () => {
 
   const { author, social } = data.site.siteMetadata
   return (
-    <div
-      style={{
-        display: `flex`,
-        marginBottom: rhythm(2.5),
-      }}
-    >
+    <Flex>
       <Image
         fixed={data.avatar.childImageSharp.fixed}
         alt={author.name}
@@ -57,13 +53,14 @@ const Bio = () => {
         }}
       />
       <p>
-        Written by <strong>{author.name}</strong> {author.summary}
+        Written by
         {` `}
         <a href={`https://twitter.com/${social.twitter}`}>
-          You should follow him on Twitter
+          <strong>{author.name}</strong>
         </a>
+        {` `} {author.summary}
       </p>
-    </div>
+    </Flex>
   )
 }
 
