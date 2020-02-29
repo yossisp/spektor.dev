@@ -1,7 +1,7 @@
 ---
-title: Hello World
-date: "2015-05-01T22:12:03.284Z"
-description: "Hello World"
+title: "The King of All Bugs: Apollo React Client + Cookie Authentication + SNI"
+date: "2020-02-29T19:19:03.284Z"
+description: "I recently was given a task to add authentication to our website..."
 ---
 
 This is my first post on my new fake blog! How exciting!
