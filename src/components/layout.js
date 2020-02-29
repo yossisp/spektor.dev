@@ -6,6 +6,7 @@ import { Link } from "system"
 import { rhythm, scale } from "../utils/typography"
 
 const Layout = ({ location, title, children }) => {
+  console.log("__PATH_PREFIX__", __PATH_PREFIX__)
   const rootPath = `${__PATH_PREFIX__}/`
   let header
 
@@ -18,16 +19,7 @@ const Layout = ({ location, title, children }) => {
           marginTop: 0,
         }}
       >
-        <Link
-          // style={{
-          //   boxShadow: `none`,
-          //   textDecoration: `none`,
-          //   color: `inherit`,
-          // }}
-          to={`/`}
-        >
-          {title}
-        </Link>
+        <Link to={`/`}>{title}</Link>
       </h1>
     )
   } else {
@@ -38,16 +30,7 @@ const Layout = ({ location, title, children }) => {
           marginTop: 0,
         }}
       >
-        <Link
-          // style={{
-          //   boxShadow: `none`,
-          //   textDecoration: `none`,
-          //   color: `inherit`,
-          // }}
-          to={`/`}
-        >
-          {title}
-        </Link>
+        <Link to={`/`}>{title}</Link>
       </h3>
     )
   }
