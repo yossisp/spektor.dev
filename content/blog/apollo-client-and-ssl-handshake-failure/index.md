@@ -19,6 +19,7 @@ export default withApollo(
   ({ initialState, headers }) => {
     return new ApolloClient({
       uri: "https://mysite.com/graphql",
+      cache: new InMemoryCache().restore(initialState || {}),
       headers, // <- headers are passed here
     })
   },
@@ -42,9 +43,11 @@ Since I added a lot of logic in the task including [CORS](https://developer.mozi
 
 At first I suspected that CORS is culprit, that somehow it blocks browser requests. This was not the case however. After removing authentication logic piece by piece in order to identify the problem I discovered the issue was passing headers to the Apollo client as can be seen in the code excerpt above, specifically the `host` header which was something like `bla.bla.bla.elasticbeanstalk.com`.
 
-"But what does that have to do with the SSL handshake error?", you ask. Well, it turns out that `host` header is quite important and is used in Server Name Indication ([SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)) extension to TLS protocol. Here's the gist:
+"But what does that have to do with the SSL handshake error?", you ask. Well, it turns out that `host` header is quite important and it may be used in Server Name Indication ([SNI](https://en.wikipedia.org/wiki/Server_Name_Indication)) extension to TLS protocol. Here's the gist:
 
-> Since issuing SSL certificate per dedicated IP address is [expensive](https://aws.amazon.com/cloudfront/custom-ssl-domains/) you need to somehow tell the server which resource you're interested in. The trick is though that before any communication between the client and server starts, SSL handshake must be made. But how does one make the SSL handshake if the resource is not yet known and the server doesn't know which certificate to send? This is where SNI comes in: the mechanism was added in order to tell the server which virtual domain to serve. SNI relies on the `host` header to tell the server which domain to serve. Since my `host` header contained Elastic Beanstalk domain SSL handshake failed because we were using AWS for deployment which uses SNI.
+> Serving multiple domains (virtual hosts) per a given IP address is called [name-based virtual hosting](https://en.wikipedia.org/wiki/Virtual_hosting#Name-based). In name-based hosting you tell the server the virtual host you're interested in via the host header. Such approach wouldn't work out of the box because headers are not sent to the server before SSL handshake has occurred. But in order for the SSL handshake to occur the server must somehow know for which domain to serve the SSL certificate. In order to solve the chicken-and-egg conundrum SNI was invented: at the beginning of SSL handshake you tell the server which domain you're interested in, usually via the `servername` option. Thus SNI allows to use SSL with name-based virtual hosting which is significantly [cheaper](https://aws.amazon.com/cloudfront/custom-ssl-domains/) than having a dedicated IP address per domain. Different clients implement SNI differently, specifically Apollo Client [uses](https://github.com/apollographql/apollo-client/blob/master/src/link/http/checkFetcher.ts) fetch API-based utility `node-fetch` which in [its turn](https://github.com/node-fetch/node-fetch/blob/cd33d2237889e13847b9b5168075753b66a16449/src/index.js#L60) uses Node.js `https` module. If the host header is set to some value then `https` module [assigns](https://github.com/nodejs/node/blob/6bcea0a38365f518580a4dbbf2f5627bede5aac5/lib/_http_agent.js#L275) the value to `servername`, otherwise the hostname is assigned to `servername`.
+
+So because I was explicitly passing the host header `bla.bla.bla.elasticbeanstalk.com`, the `servername` was set to it and as a result SNI failed because our SSL certificate was rather for `mysite.com`.
 
 In order to fix the bug I [found out](https://github.com/lfades/next-with-apollo/issues/88#issuecomment-570010727) that you can simply pass only the header you need in Apollo client constructor, so I only passed the cookie header:
 
@@ -57,6 +60,7 @@ export default withApollo(
   ({ initialState, headers }) => {
     return new ApolloClient({
       uri: "https://mysite.com/graphql",
+      cache: new InMemoryCache().restore(initialState || {}),
       headers: {
         cookie: headers?.cookie,
       },
