@@ -1,5 +1,6 @@
 import Typography from "typography"
 import Wordpress2016 from "typography-theme-wordpress-2016"
+import colors from "color"
 
 Wordpress2016.overrideThemeStyles = () => {
   return {
@@ -7,7 +8,7 @@ Wordpress2016.overrideThemeStyles = () => {
       boxShadow: `none`,
     },
     a: {
-      color: "#ee7b1d",
+      color: colors.link,
     },
   }
 }

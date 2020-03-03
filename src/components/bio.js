@@ -8,7 +8,7 @@
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import Image from "gatsby-image"
-import { Flex, Span } from "theme"
+import { Flex, Span, Link } from "theme"
 
 import { rhythm } from "../utils/typography"
 
@@ -56,9 +56,9 @@ const Bio = () => {
       <Span maxWidth={250}>
         This is a blog about nothing by
         {` `}
-        <a href={`https://twitter.com/${social.twitter}`}>
+        <Link external to={`https://twitter.com/${social.twitter}`}>
           <Span bold>{author.name}</Span>.
-        </a>
+        </Link>
       </Span>
     </Flex>
   )

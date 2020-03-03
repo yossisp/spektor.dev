@@ -1,7 +1,7 @@
 import React from "react"
 import { ThemeProvider } from "styled-components"
 import { theme } from "theme"
-import { Link } from "theme"
+import { Link, Span } from "theme"
 
 import { rhythm, scale } from "../utils/typography"
 
@@ -47,9 +47,9 @@ const Layout = ({ location, title, children }) => {
         <header>{header}</header>
         <main>{children}</main>
         <footer>
-          <a href={`https://twitter.com/SpektorYossi`}>
-            <strong>twitter</strong>
-          </a>
+          <Link external to={`https://twitter.com/SpektorYossi`}>
+            <Span bold>twitter</Span>
+          </Link>
         </footer>
       </div>
     </ThemeProvider>
