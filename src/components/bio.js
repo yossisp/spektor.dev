@@ -8,7 +8,7 @@
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import Image from "gatsby-image"
-import { Flex, Span } from "system"
+import { Flex, Span } from "theme"
 
 import { rhythm } from "../utils/typography"
 
@@ -53,14 +53,12 @@ const Bio = () => {
           borderRadius: `50%`,
         }}
       />
-      <Span maxWidth={300}>
-        A blog about nothing by
+      <Span maxWidth={250}>
+        This is a blog about nothing by
         {` `}
         <a href={`https://twitter.com/${social.twitter}`}>
           <Span bold>{author.name}</Span>.
         </a>
-        {` `}
-        Proudly coronavirus-free since 1888.
       </Span>
     </Flex>
   )

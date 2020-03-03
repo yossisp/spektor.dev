@@ -18,7 +18,7 @@ import renderFn from "./render"
 export default withApollo(
   ({ initialState, headers }) => {
     return new ApolloClient({
-      uri: "https://mysite.com/graphql",
+      uri: "https://example.com/graphql",
       cache: new InMemoryCache().restore(initialState || {}),
       headers, // <- headers are passed here
     })
@@ -29,7 +29,7 @@ export default withApollo(
 )
 ```
 
-At this point point I was quite happy and went for a break to practice my [Yo-Yo](https://www.youtube.com/watch?v=-wiNh4LLQzg) skills (Yo-Yo-ing has become trendy in our office).
+After I implemented the logic I was quite happy and went for a break to practice my [Yo-Yo](https://www.youtube.com/watch?v=-wiNh4LLQzg) skills (Yo-Yo-ing has become trendy in our office).
 
 I returned to my work station in order to finish the task: polish the server logic which handles authentication. Eventually I was done.
 
@@ -47,7 +47,7 @@ At first I suspected that CORS is culprit, that somehow it blocks browser reques
 
 > Serving multiple domains (virtual hosts) per a given IP address is called [name-based virtual hosting](https://en.wikipedia.org/wiki/Virtual_hosting#Name-based). In name-based hosting you tell the server the virtual host you're interested in via the host header. Such approach wouldn't work out of the box because headers are not sent to the server before SSL handshake has occurred. But in order for the SSL handshake to occur the server must somehow know for which domain to serve the SSL certificate. In order to solve the chicken-and-egg conundrum SNI was invented: at the beginning of SSL handshake you tell the server which domain you're interested in, usually via the `servername` option. Thus SNI allows to use SSL with name-based virtual hosting which is significantly [cheaper](https://aws.amazon.com/cloudfront/custom-ssl-domains/) than having a dedicated IP address per domain. Different clients implement SNI differently, specifically Apollo Client [uses](https://github.com/apollographql/apollo-client/blob/master/src/link/http/checkFetcher.ts) fetch API-based utility `node-fetch` which in [its turn](https://github.com/node-fetch/node-fetch/blob/cd33d2237889e13847b9b5168075753b66a16449/src/index.js#L60) uses Node.js `https` module. If the host header is set to some value then `https` module [assigns](https://github.com/nodejs/node/blob/6bcea0a38365f518580a4dbbf2f5627bede5aac5/lib/_http_agent.js#L275) the value to `servername`, otherwise the hostname is assigned to `servername`.
 
-So because our AWS setup was configured to use SNI for the website and I was explicitly passing the host header `bla.bla.bla.elasticbeanstalk.com`, the `servername` was set to it and as a result SNI failed because our SSL certificate was rather for `mysite.com`.
+So because our AWS setup was configured to use SNI for the website and I was explicitly passing the host header `bla.bla.bla.elasticbeanstalk.com`, the `servername` was set to it and as a result SNI failed because our SSL certificate was rather for `example.com`.
 
 In order to fix the bug I [found out](https://github.com/lfades/next-with-apollo/issues/88#issuecomment-570010727) that you can simply pass only the header you need in Apollo client constructor, so I only passed the cookie header:
 
@@ -59,7 +59,7 @@ import renderFn from "./render"
 export default withApollo(
   ({ initialState, headers }) => {
     return new ApolloClient({
-      uri: "https://mysite.com/graphql",
+      uri: "https://example.com/graphql",
       cache: new InMemoryCache().restore(initialState || {}),
       headers: {
         cookie: headers?.cookie,

@@ -1,7 +1,7 @@
 import React from "react"
 import { ThemeProvider } from "styled-components"
 import { theme } from "theme"
-import { Link } from "system"
+import { Link } from "theme"
 
 import { rhythm, scale } from "../utils/typography"
 
