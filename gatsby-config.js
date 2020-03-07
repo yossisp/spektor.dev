@@ -5,7 +5,7 @@ module.exports = {
       name: `Yossi Spektor`,
       summary: `about software development.`,
     },
-    description: `The blog is about interesting bugs I came across and tips that I would like to share.`,
+    description: `The blog is about interesting software bugs I came across and programming tips that I would like to share.`,
     siteUrl: `https://www.spektor.dev`,
     social: {
       twitter: `SpektorYossi`,

@@ -10,7 +10,6 @@ StyledGatsbyLink.displayName = "StyledLink"
 
 const Link = ({ external, to, target = "_blank", className, children }) => {
   if (external) {
-    console.log("external to", to)
     return (
       <a className={className} href={to} target={target}>
         {children}
