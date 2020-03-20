@@ -1,6 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: `Spektor.dev`,
+    titleAlt: "Spektor.dev", // Title for JSONLD
+    headline: "Content for Spektor.dev", // Headline for schema.org JSONLD
     author: {
       name: `Yossi Spektor`,
       summary: `about software development.`,
@@ -10,6 +12,16 @@ module.exports = {
     social: {
       twitter: `SpektorYossi`,
     },
+    siteLanguage: `en`,
+    logo: "/favicon.ico", // Used for SEO
+    // JSONLD / Manifest
+    favicon: "static/favicon.ico", // Used for manifest favicon generation
+    shortName: "Spektor.dev", // shortname for manifest. MUST be shorter than 12 characters
+    banner:
+      "https://res.cloudinary.com/forcepam/image/upload/v1584732685/egiwwstex9qqudasfvgq.jpg",
+    headline: "A blog about software development",
+    ogLanguage: "en_US",
+    twitter: "@SpektorYossi",
   },
   plugins: [
     {

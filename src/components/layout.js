@@ -10,7 +10,6 @@ const Layout = ({ location, title, children }) => {
   let header
 
   if (location.pathname === rootPath) {
-    console.log("location.pathname === rootPath")
     header = (
       <h1
         style={{
