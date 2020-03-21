@@ -1,7 +1,5 @@
-import theme from "./theme"
-import Card from "./Card"
-import Flex from "./Flex"
-import Link from "./Link"
-import Span from "./Span"
-
-export { theme, Card, Flex, Link, Span }
+export { default as theme } from "./theme"
+export { default as Card } from "./Card"
+export { default as Flex } from "./Flex"
+export { default as Link } from "./Link"
+export { default as Span } from "./Span"
