@@ -17,6 +17,7 @@ const SEO = ({ title, desc, banner, pathname, post }) => {
       defaultTitle,
       defaultDescription,
       defaultBanner,
+      bannerSharpened,
       headline,
       siteLanguage,
       ogLanguage,
@@ -29,7 +30,7 @@ const SEO = ({ title, desc, banner, pathname, post }) => {
   const seo = {
     title: title || defaultTitle,
     description: desc || defaultDescription,
-    image: `${banner || defaultBanner}`,
+    image: `${bannerSharpened || defaultBanner}`,
     url: `${siteUrl}${pathname || ""}`,
   }
 
@@ -207,6 +208,7 @@ const query = graphql`
         defaultTitle: title
         defaultDescription: description
         defaultBanner: banner
+        bannerSharpened
         headline
         siteLanguage
         ogLanguage
