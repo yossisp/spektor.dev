@@ -3,10 +3,9 @@ import Helmet from "react-helmet"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
 import Twitter from "./Twitter"
-// import Facebook from "./Facebook"
+import Facebook from "./Facebook"
 
 // Complete tutorial: https://www.gatsbyjs.org/docs/add-seo-component/
-
 const SEO = ({ title, desc, pathname, post }) => {
   const { site } = useStaticQuery(query)
 
@@ -171,7 +170,7 @@ const SEO = ({ title, desc, pathname, post }) => {
         desc={seo.description}
         username={twitter}
       />
-      {/* <Facebook
+      <Facebook
         desc={seo.description}
         image={seo.image}
         title={seo.title}
@@ -179,7 +178,7 @@ const SEO = ({ title, desc, pathname, post }) => {
         url={seo.url}
         locale={ogLanguage}
         name={facebook}
-      /> */}
+      />
     </>
   )
 }
