@@ -33,8 +33,6 @@ const SEO = ({ title, desc, banner, pathname, post }) => {
     url: `${siteUrl}${pathname || ""}`,
   }
 
-  console.log("seo", seo, "banner", banner, "defaultBanner", defaultBanner)
-
   // schema.org in JSONLD format
   // https://developers.google.com/search/docs/guides/intro-structured-data
   // You can fill out the 'author', 'creator' with more data or another type (e.g. 'Organization')
@@ -184,7 +182,7 @@ const SEO = ({ title, desc, banner, pathname, post }) => {
     </>
   )
 }
-export default SEO
+
 SEO.propTypes = {
   title: PropTypes.string,
   desc: PropTypes.string,
@@ -199,6 +197,7 @@ SEO.defaultProps = {
   pathname: null,
   post: null,
 }
+
 const query = graphql`
   query SEO {
     site {
@@ -220,3 +219,5 @@ const query = graphql`
     }
   }
 `
+
+export default SEO
