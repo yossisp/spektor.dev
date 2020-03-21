@@ -17,10 +17,10 @@ module.exports = {
     // JSONLD / Manifest
     favicon: "static/favicon.ico", // Used for manifest favicon generation
     shortName: "Spektor.dev", // shortname for manifest. MUST be shorter than 12 characters
-    banner:
-      "https://res.cloudinary.com/forcepam/image/upload/v1584732685/egiwwstex9qqudasfvgq.jpg",
-    bannerSharpened:
+    profilePic:
       "https://res.cloudinary.com/forcepam/image/upload/w_1000,ar_16:9,c_fill,g_auto,e_sharpen/v1584732685/egiwwstex9qqudasfvgq.jpg",
+    siteLogo:
+      "https://res.cloudinary.com/forcepam/image/upload/v1584804134/ddwxkvjv2wseyqc2wkpo.png",
     headline: "A blog about software development",
     ogLanguage: "en_US",
     twitter: "@SpektorYossi",
