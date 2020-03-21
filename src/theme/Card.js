@@ -11,6 +11,8 @@ const Card = styled.div`
 Card.displayName = "Card"
 Card.propTypes = {
   ...propTypes.space,
+  ...propTypes.border,
+  ...propTypes.color,
 }
 
 export default Card

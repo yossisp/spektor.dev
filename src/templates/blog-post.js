@@ -1,6 +1,6 @@
 import React from "react"
-import { Link, graphql } from "gatsby"
-
+import { graphql } from "gatsby"
+import { Flex, Link, List } from "theme"
 import { Bio, Layout, SEO } from "components"
 import { rhythm, scale } from "../utils/typography"
 
@@ -49,30 +49,24 @@ const BlogPostTemplate = ({ data, pageContext, location }) => {
       </article>
 
       <nav>
-        <ul
-          style={{
-            display: `flex`,
-            flexWrap: `wrap`,
-            justifyContent: `space-between`,
-            listStyle: `none`,
-            padding: 0,
-          }}
-        >
-          <li>
-            {previous && (
-              <Link to={previous.fields.slug} rel="prev">
-                ← {previous.frontmatter.title}
-              </Link>
-            )}
-          </li>
-          <li>
-            {next && (
-              <Link to={next.fields.slug} rel="next">
-                {next.frontmatter.title} →
-              </Link>
-            )}
-          </li>
-        </ul>
+        <List noStyle>
+          <Flex justifyContent="space-between" padding={0} flexWrap="wrap">
+            <li>
+              {previous && (
+                <Link to={previous.fields.slug} rel="prev">
+                  ← {previous.frontmatter.title}
+                </Link>
+              )}
+            </li>
+            <li>
+              {next && (
+                <Link to={next.fields.slug} rel="next">
+                  {next.frontmatter.title} →
+                </Link>
+              )}
+            </li>
+          </Flex>
+        </List>
       </nav>
     </Layout>
   )
