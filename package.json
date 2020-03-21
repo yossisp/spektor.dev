@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@styled-system/prop-types": "^5.1.5",
-    "babel-plugin-styled-components": "^1.10.7",
     "gatsby": "^2.19.7",
     "gatsby-image": "^2.2.39",
     "gatsby-plugin-feed": "^2.3.26",
@@ -42,6 +41,7 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-export-default-from": "^7.8.3",
+    "babel-plugin-styled-components": "^1.10.7",
     "babel-preset-gatsby": "^0.3.0",
     "prettier": "^1.19.1"
   },
