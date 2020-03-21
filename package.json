@@ -54,7 +54,7 @@
     "url": "git+https://github.com/yossisp/spektor.dev.git"
   },
   "engines": {
-    "node": ">=12.13.0"
+    "node": ">=10.13.0"
   },
   "scripts": {
     "build": "gatsby build",
