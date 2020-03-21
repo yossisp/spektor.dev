@@ -43,7 +43,7 @@
   "devDependencies": {
     "prettier": "^1.19.1"
   },
-  "homepage": "https://github.com/gatsbyjs/gatsby-starter-blog#readme",
+  "homepage": "https://github.com/yossisp/spektor.dev#readme",
   "keywords": [
     "gatsby"
   ],
@@ -51,7 +51,10 @@
   "main": "n/a",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gatsbyjs/gatsby-starter-blog.git"
+    "url": "git+https://github.com/yossisp/spektor.dev.git"
+  },
+  "engines": {
+    "node": ">=12.13.0"
   },
   "scripts": {
     "build": "gatsby build",
