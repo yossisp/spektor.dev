@@ -2,8 +2,8 @@ import React from "react"
 import Helmet from "react-helmet"
 import PropTypes from "prop-types"
 import { useStaticQuery, graphql } from "gatsby"
+import Twitter from "./Twitter"
 // import Facebook from "./Facebook"
-// import Twitter from "./Twitter"
 
 // Complete tutorial: https://www.gatsbyjs.org/docs/add-seo-component/
 
@@ -29,9 +29,11 @@ const SEO = ({ title, desc, banner, pathname, post }) => {
   const seo = {
     title: title || defaultTitle,
     description: desc || defaultDescription,
-    image: `${siteUrl}${banner || defaultBanner}`,
+    image: `${banner || defaultBanner}`,
     url: `${siteUrl}${pathname || ""}`,
   }
+
+  console.log("seo", seo, "banner", banner, "defaultBanner", defaultBanner)
 
   // schema.org in JSONLD format
   // https://developers.google.com/search/docs/guides/intro-structured-data
@@ -164,6 +166,12 @@ const SEO = ({ title, desc, banner, pathname, post }) => {
         )}
         <script type="application/ld+json">{JSON.stringify(breadcrumb)}</script>
       </Helmet>
+      <Twitter
+        title={seo.title}
+        image={seo.image}
+        desc={seo.description}
+        username={twitter}
+      />
       {/* <Facebook
         desc={seo.description}
         image={seo.image}
@@ -172,12 +180,6 @@ const SEO = ({ title, desc, banner, pathname, post }) => {
         url={seo.url}
         locale={ogLanguage}
         name={facebook}
-      /> */}
-      {/* <Twitter
-        title={seo.title}
-        image={seo.image}
-        desc={seo.description}
-        username={twitter}
       /> */}
     </>
   )
