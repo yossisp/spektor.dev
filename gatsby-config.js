@@ -20,7 +20,7 @@ module.exports = {
     profilePic:
       "https://res.cloudinary.com/forcepam/image/upload/w_1000,ar_16:9,c_fill,g_auto,e_sharpen/v1584732685/egiwwstex9qqudasfvgq.jpg",
     siteLogo:
-      "https://res.cloudinary.com/forcepam/image/upload/v1584804134/ddwxkvjv2wseyqc2wkpo.png",
+      "https://res.cloudinary.com/forcepam/image/upload/c_thumb,w_300,g_face/v1584804134/ddwxkvjv2wseyqc2wkpo.png",
     headline: "A blog about software development",
     ogLanguage: "en_US",
     twitter: "@SpektorYossi",
