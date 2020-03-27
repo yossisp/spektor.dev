@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: `Spektor.dev`,
+    title: `Spektor?.dev`,
     titleAlt: "Spektor.dev", // Title for JSONLD
     headline: "Content for Spektor.dev", // Headline for schema.org JSONLD
     author: {
