@@ -1,6 +1,7 @@
 ---
 title: "The Curious Case of Git, macOS Filesystem and Case Sensitivity"
 date: "2020-03-21T19:19:03.284Z"
+description: "Case Sensitivity on macOS Filesystem and in Git"
 ---
 
 While working on this blog (which I forked from [here](https://github.com/gatsbyjs/gatsby-starter-blog)) I noticed that I have a file `bio.js` which was a React component. I'm used to capitalizing React components so I renamed the file `Bio.js`. I worked on some other files, made a git commit, pushed the changes and deployed. The build failed. I use Netlify for deployments so I started reading their build logs. The build failed because of this error:
