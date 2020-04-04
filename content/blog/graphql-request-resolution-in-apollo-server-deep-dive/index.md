@@ -36,7 +36,7 @@ There're several ways of changing the resulting data before it is returned to th
 
 Consider this example, with the following schema for an app which allows users to make reviews and reply to the reviews (of course in reality there would be many more fields):
 
-```
+```graphql
 type Review {
   id
   content
@@ -51,7 +51,7 @@ type Reply {
 
 Suppose you define separate resolvers for `Review` and `Reply`. [prisma.io](https://www.prisma.io/) or [graphql-compose](https://graphql-compose.github.io/) can be used to provide such resolvers out of the box with support for sorting and filter arguments. Then, you would define a relation between `Review` and `Reply` so that you can query for all reviews populated with replies and sorted in ascending chronological order as follows:
 
-```
+```graphql
 reviews(sort: ASCENDING_ORDER) {
     content
     replies {
@@ -62,26 +62,23 @@ reviews(sort: ASCENDING_ORDER) {
 
 Finally, suppose you need to re-order some elements: perhaps all reviews should be ordered chronologically, but the review with the most replies should be the one on top. The first impulse some may have (I certainly did! &#128578;) is to use some resolver middleware on `Review` resolver in order to receive all of the reviews, find the review with most replies and move it on top of resulting array. For example, this can be done like so:
 
-```
-import { applyMiddleware } from 'graphql-middleware'
-const { ApolloServer } = require('apollo-server-express');
-import { schema } from './someSchema'
+```js
+import { applyMiddleware } from "graphql-middleware"
+const { ApolloServer } = require("apollo-server-express")
+import { schema } from "./someSchema"
 const reviewsMiddleware = {
   Query: {
     reviews: async (resolve, parent, args, context, info) => {
-      const reviews = await resolve(parent, args, context, info);
+      const reviews = await resolve(parent, args, context, info)
       // perform custom logic
-      return reviews;
-    }
-  }
-};
+      return reviews
+    },
+  },
+}
 
 const server = new ApolloServer({
-  schema: applyMiddleware(
-    schema,
-    userReviewsMiddleware
-  ),
-  ...otherOptions
+  schema: applyMiddleware(schema, userReviewsMiddleware),
+  ...otherOptions,
 })
 ```
 
