@@ -5,11 +5,14 @@ description: "The post provides examples for possible GraphQL resolvers middlewa
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;">
-    <img src="GraphQL_Logo.svg"
-        alt="GraphQL Logo"
-        />
+    <div style="width:30%;">
+        <img src="GraphQL_Logo.svg"
+            alt="GraphQL Logo"
+            style="margin:0;"
+            />
+    </div>
         <span style="font-size: 64px;padding-left:16px;padding-right:16px;">+</span>
-    <div style="width:50%;">
+    <div style="width:30%;">
     <img src="apollo.png"
         alt="Apollo Logo"
         />

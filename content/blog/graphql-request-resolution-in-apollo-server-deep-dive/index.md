@@ -8,6 +8,7 @@ description: "The post explains the details of how Apollo server resolves graphq
     <div style="width:30%;">
         <img src="GraphQL_Logo.svg"
             alt="GraphQL Logo"
+            style="margin:0;"
             />
     </div>
         <span style="font-size: 64px;padding-left:16px;padding-right:16px;">+</span>
