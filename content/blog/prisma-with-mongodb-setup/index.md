@@ -38,7 +38,7 @@ services:
 A couple of notes:
 
 1. `managementApiSecret` is needed to enable authentication of requests to prisma server.
-2. For local developement on Mac, you need to define `uri` as `mongodb://host.docker.internal:27017/admin`. This is because prisma is running from a docker instance and docker's networking namespace is not the same as of your host machine. On Linux you can use `host` [option](https://docs.docker.com/network/network-tutorial-host/) when starting docker container.
+2. For local developement on Mac, you need to define `uri` as `mongodb://host.docker.internal:27017/admin` assuming your mongodb instance is running on the host machine itself. This is because prisma is running from a docker instance and docker's networking namespace is not the same as of your host machine. On Linux you can use `host` [option](https://docs.docker.com/network/network-tutorial-host/) when starting docker container.
 3. Fun fact: you may be wondering what the vertical slash (`|`) is for. In YAML files it is used for multi-line input. So `PRISMA_CONFIG` is just one big string.
 
 You can start the prisma server by `docker-compose -f prisma-server.yml up -d` from inside `prisma` folder.

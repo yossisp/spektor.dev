@@ -5,11 +5,13 @@ description: "The post explains the details of how Apollo server resolves graphq
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;">
-    <img src="GraphQL_Logo.svg"
-        alt="GraphQL Logo"
-        />
+    <div style="width:30%;">
+        <img src="GraphQL_Logo.svg"
+            alt="GraphQL Logo"
+            />
+    </div>
         <span style="font-size: 64px;padding-left:16px;padding-right:16px;">+</span>
-    <div style="width:50%;">
+    <div style="width:30%;">
     <img src="apollo.png"
         alt="Apollo Logo"
         />
