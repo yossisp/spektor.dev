@@ -1,5 +1,5 @@
 ---
-title: "The King of All Bugs: Cookie-based Authentication + Apollo React Client Results in SSL Handshake Failure"
+title: "Cookie-based Authentication + Apollo React Client Results in SSL Handshake Failure"
 date: "2020-02-29T19:19:03.284Z"
 description: "TL;DR: handle host header with care."
 ---
