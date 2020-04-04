@@ -16,14 +16,14 @@ Although several tutorials exist on how to create new mongodb instance from scra
 
 First, create a folder in your project called `prisma`. Add docker-compose file `prisma-server.yml` with the following content:
 
-```
-version: '3'
+```yaml
+version: "3"
 services:
   prisma:
     image: prismaGraphQL/prisma:1.34
     restart: always
     ports:
-      - '4466:4466'
+      - "4466:4466"
     environment:
       PRISMA_CONFIG: |
         managementApiSecret: __YOUR_MANAGEMENT_API_SECRET__
