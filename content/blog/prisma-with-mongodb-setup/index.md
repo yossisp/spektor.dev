@@ -45,13 +45,13 @@ You can start the prisma server by `docker-compose -f prisma-server.yml up -d` f
 
 Now install prisma cli tool `npm i -g prisma`. Add another file in the prisma folder called `prisma.yml` and paste the content into it:
 
-```
+```yaml
 endpoint: http://localhost:4466
 datamodel: datamodel.prisma
 databaseType: document
 generate:
-    - generator: javascript-client
-      output: ./generated/prisma-client/
+  - generator: javascript-client
+    output: ./generated/prisma-client/
 ```
 
 The file contains deployment and cofiguration settings for prisma service. It's important to specify `databaseType` as document because we're dealing with mongodb.
