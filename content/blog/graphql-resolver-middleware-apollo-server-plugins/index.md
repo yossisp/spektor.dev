@@ -23,7 +23,12 @@ I recently came across a problem where I needed to perform some custom logic on 
 
 It's important to understand whether resolver middleware can be used for the specific task or you will need Apollo Server-level middleware. Keep in mind that resolver middleware is run per resolver while some Apollo Server plugins will be run on the final result before it is sent back to the client. You can learn more on when resolver middleware will not be of help in my previous [post](https://spektor.dev/graphql-resolver-middleware-apollo-server-plugins/).
 
-###Resolver middleware:
+## Table of Contents
+
+1. [Resolver middleware](#resolver_middleware)
+2. [Response middleware in Apollo Server](#response_middleware)
+
+### Resolver middleware: <a name="resolver_middleware"></a>
 
 1. In graphql-compose you can [use](https://github.com/graphql-compose/graphql-compose-mongoose/blob/980044bcf481f9168ef5938ca0b5fb01abaca978/README.md) `wrapResolve` helper as follows:
 
@@ -86,7 +91,7 @@ const server = new ApolloServer({
 })
 ```
 
-###Response middleware in Apollo Server:
+### Response middleware in Apollo Server: <a name="response_middleware"></a>
 
 1. The easiest option which requires minimal configuration is `formatResponse` which can be enabled like so:
 
