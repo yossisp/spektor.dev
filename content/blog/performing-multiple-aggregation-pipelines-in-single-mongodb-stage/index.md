@@ -4,7 +4,7 @@ date: "2020-05-22T19:15:03.284Z"
 description: "How To Perform Multiple Aggregation Pipelines Within a Single Stage In MongoDB"
 ---
 
-Recently, I had to add pagination feature to our website (our data resides in MongoDB). I wanted to define a single MongoDB aggregation pipeline which would fetch the required data (products) based on the criteria the user selects for the `n`-th page. But I also wanted the aggregation to return the total amount of products in the same aggregation. The last part turned out a bit tricky.
+Recently, I had to add pagination feature to our website (our data resides in MongoDB). I wanted to define a single MongoDB aggregation pipeline which would fetch the required data (products) based on the criteria the user selects for the `n`-th page. But I also wanted the aggregation to return the total amount of products matched in the same aggregation. The last part turned out a bit tricky.
 
 First, MongoDB aggregation pipeline stages work sort of like Unix "pipes": you do something in one stage and the next stage receives the output of the previous one. So let's say these are the stages needed to output the products:
 
@@ -14,14 +14,14 @@ ProductCollection.aggregate([
   {
     $lookup: {
       from: "ProductSupplier",
-      localField: "a",
-      foreignField: "b",
+      localField: "productSupplierId",
+      foreignField: "_id",
       as: "productSupplier",
     },
   },
   {
     $sort: {
-      c: { price: 1 },
+      price: 1,
     },
   },
   {
@@ -33,7 +33,7 @@ ProductCollection.aggregate([
 ])
 ```
 
-`{ $count: 'totalCount' }` stage can be used to return the overall number of products. However, it can't be used anywhere which the pipeline because its result is simply (if the number of products is `4`):
+`{ $count: 'totalCount' }` stage can be used to return the overall number of products. However, it can't be used anywhere within the pipeline because its result is simply (if the number of products is `4`):
 
 ```json
 { "totalCount": 4 }
@@ -76,4 +76,15 @@ ProductCollection.aggregate([
     $unwind: "$totalMatchedCount",
   },
 ])
+```
+
+After such query the following result will be returned:
+
+```js
+{
+  products: [
+    // ... products
+  ],
+  totalMatchedCount: 100 // if 100 products were matched
+}
 ```
