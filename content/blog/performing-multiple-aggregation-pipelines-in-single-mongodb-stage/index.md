@@ -53,14 +53,14 @@ ProductCollection.aggregate([
         {
           $lookup: {
             from: "ProductSupplier",
-            localField: "a",
-            foreignField: "b",
+            localField: "productSupplierId",
+            foreignField: "_id",
             as: "productSupplier",
           },
         },
         {
           $sort: {
-            c: { price: 1 },
+            price: 1,
           },
         },
         {
