@@ -15,7 +15,6 @@ const SEO = ({ title, desc, pathname, post }) => {
       siteUrl,
       defaultTitle,
       defaultDescription,
-      defaultBanner,
       siteLogo,
       headline,
       siteLanguage,
@@ -67,7 +66,7 @@ const SEO = ({ title, desc, pathname, post }) => {
     dateModified: buildTime,
     image: {
       "@type": "ImageObject",
-      url: `${siteUrl}${defaultBanner}`,
+      url: `${siteLogo}`,
     },
   }
 
@@ -108,7 +107,7 @@ const SEO = ({ title, desc, pathname, post }) => {
         name: author.name,
         logo: {
           "@type": "ImageObject",
-          url: `${siteUrl}${defaultBanner}`,
+          url: `${siteLogo}`,
         },
       },
       datePublished: post.frontmatter.date,
