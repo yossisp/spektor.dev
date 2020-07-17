@@ -100,7 +100,10 @@ const proxy = new Proxy(theOffice, {
 const Rating = ({ tvShow }) => (
   <>
     {Object.keys(tvShow).map(rating => (
-      <div key={rating} style={{ fontSize: rating === "imdbRating" ? 24 : 16 }}>
+      <div
+        key={rating}
+        style={{ fontSize: rating === proxy.imdbRating ? 24 : 16 }}
+      >
         {rating} - {tvShow[rating]}
       </div>
     ))}
