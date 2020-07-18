@@ -93,7 +93,10 @@ const theOffice = {
 
 const proxy = new Proxy(theOffice, {
   get: function(originalObject, objectKey) {
-    return objectKey
+    if (originalObject.hasOwnProperty(objectKey)) {
+      return objectKey
+    }
+    throw new Error(`The field '${objectKey}' doesn't exist.`)
   },
 })
 
