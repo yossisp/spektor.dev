@@ -1,7 +1,7 @@
 ---
-title: "How To Write an HTTP request utility in Go"
+title: "How To Write an HTTP Request Utility in Go"
 date: "2020-10-10T15:31:03.284Z"
-description: "How To Write an HTTP request utility in Go"
+description: "How To Write an HTTP Request Utility in Go"
 ---
 
 I recently started a project in Go language which is really fun. In my project I frequently make requests to an external API so I wrote I handy request utility which uses recursion to make retries. One of the main reasons for writing such a utility it that if authentication is required to an API you use then you want to write authentication logic once. This way if it's Oauth for example and your access token has expired the utility will always take care of getting a new access token (using the refresh token). In addition the utility can set headers common to all requests like `Content-Type` for example or perform any other logic common to all requests like logging. I will explain some of the gotchas I ran into while writing the code after the code snippet:
