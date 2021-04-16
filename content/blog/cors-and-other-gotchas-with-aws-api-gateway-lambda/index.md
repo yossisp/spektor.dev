@@ -4,14 +4,14 @@ date: "2021-04-16T09:41:03.284Z"
 description: "How to Configure CORS in AWS API Gateway with Lambda And Other Gotchas"
 ---
 
+I recently had a project where I had a website which used a REST API comprised of just one endpoint, which performed a very simple task. This is a great use case for a serverless function, like [AWS Lambda](https://aws.amazon.com/lambda).
+
 ### Table of Contents:
 
 1. [CORS issue.](#cors)
 2. [Test event quirk.](#test-event)
 
-<a name="cors" style="color: black;box-shadow: none;">I</a> recently had a project where I had a website which used a REST API comprised of just one endpoint, which performed a very simple task. This is a great use case for a serverless function, like [AWS Lambda](https://aws.amazon.com/lambda).
-
-In order to expose an AWS Lambda function to the "outer world" another AWS service can be used: [API Gateway](https://aws.amazon.com/api-gateway). A great tutorial from AWS explains how to set up [AWS Lambda](https://webapp.serverlessworkshops.io/serverlessbackend/) and [API Gateway](https://webapp.serverlessworkshops.io/restfulapis/restapi/) services.
+<a name="cors" style="color: black;box-shadow: none;">In</a> order to expose an AWS Lambda function to the "outer world" another AWS service can be used: [API Gateway](https://aws.amazon.com/api-gateway). A great tutorial from AWS explains how to set up [AWS Lambda](https://webapp.serverlessworkshops.io/serverlessbackend/) and [API Gateway](https://webapp.serverlessworkshops.io/restfulapis/restapi/) services.
 
 Since my website and the REST API used different domains and [non-simple requests](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS#simple_requests) I had to whitelist the website domain in the backend service in order to comply with CORS. API Gateway passes incoming requests to AWS Lambda so I thought all I need to do is enable CORS in API Gateway which is quite easy because during API Gateway resource setup you can check `Enable CORS` checkbox:
 
