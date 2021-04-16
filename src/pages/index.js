@@ -27,8 +27,9 @@ const BlogIndex = ({ data, location }) => {
               <small>{node.frontmatter.date}</small>
             </header>
             <section>
-              <Link to={node.fields.slug} color="hsla(0,0%,0%,0.9)">
+              <Link to={node.fields.slug}>
                 <p
+                  style={{ color: "hsla(0,0%,0%,0.9)" }}
                   dangerouslySetInnerHTML={{
                     __html: node.excerpt,
                   }}
