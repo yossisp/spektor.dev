@@ -2,6 +2,7 @@
 title: "Filtering Values In Nested Arrays In MongoDB"
 date: 2020-12-25T14:27:03.284Z
 description: "How To Filter Values In Nested Arrays In MongoDB"
+tags: "mongodb"
 ---
 
 Usually when you make queries in MongoDB, the returned result is the whole document with all the fields unless you make a projection. However, sometimes you may want to filter some field, specifically an array field by a certain condition. There're 3 options to achieve this:

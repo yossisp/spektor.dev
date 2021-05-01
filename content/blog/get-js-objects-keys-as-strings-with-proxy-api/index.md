@@ -2,6 +2,7 @@
 title: "How To Programmatically Get Javascript Objects Key Names Using Proxy API"
 date: 2020-07-17T15:31:03.284Z
 description: "How To Programmatically Get Javascript Objects Key Names Using Proxy API"
+tags: "javascript, objects"
 ---
 
 I find myself frequently iterating over some Javascript object keys and then performing specific actions which are relevant for some key. For example, imagine there's a website which aggregates various ratings of TV shows. The website wants to display all ratings of a particular show but the font size of IMDB rating should be 24 while all other ratings font size should be 16. Let's say the website uses [React.js](https://reactjs.org/) as their frontend framework:

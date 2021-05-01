@@ -2,6 +2,7 @@
 title: "Accessing Parent Methods in Javascript Classes"
 date: 2020-12-05T11:12:04.284Z
 description: "Accessing Parent Methods in Javascript Classes"
+tags: "javascript, classes"
 ---
 
 I recently got to do [Object-Oriented programming](https://en.wikipedia.org/wiki/Object-oriented_programming) in Javascript. Many of the Javascript features resemble Java language (`class`, `super`, `extends` and `static` keywords to name a few).

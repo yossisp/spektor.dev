@@ -2,6 +2,7 @@
 title: "How To Set Up prisma.io With Existing Mongodb Database"
 date: 2020-03-27T19:19:03.284Z
 description: "How To Set Up prisma.io With Existing Mongodb Database"
+tags: "graphql, prisma.io, mongodb"
 ---
 
 [Prisma](https://www.prisma.io/) does a lot of cool stuff but I think it's primarily known for allowing to perform CRUD operations on a database via GraphQL. It started out with support for SQL databases but it now supports Mongodb as well.

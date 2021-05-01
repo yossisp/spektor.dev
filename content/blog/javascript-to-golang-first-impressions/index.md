@@ -2,6 +2,7 @@
 title: "Javascript to Golang: First Impressions"
 date: 2020-11-20T15:31:03.284Z
 description: "First Impressions of Golang From a Javascript Developer"
+tags: "golang, javascript"
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;padding-bottom:50px;">

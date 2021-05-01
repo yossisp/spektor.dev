@@ -2,6 +2,7 @@
 title: "How To Add Defaults In Mongoose Nested Schemas"
 date: 2020-07-10T14:27:03.284Z
 description: "How To Add Defaults In Mongoose Nested Schemas"
+tags: "mongoose, mongodb"
 ---
 
 Recently, I needed to update an existing [mongoose](https://mongoosejs.com/) schema (for those unfamiliar mongoose is a Javascript ORM for MongoDB) with a nested `rating` object. During the task I needed to define default values for nested mongoose schemas and update the existing documents with those which turned out a bit tricky. Read further for tips on how to do it.

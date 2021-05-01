@@ -2,6 +2,7 @@
 title: "How To Perform Multiple Aggregation Pipelines Within a Single Stage In MongoDB"
 date: 2020-05-22T19:15:03.284Z
 description: "How To Perform Multiple Aggregation Pipelines Within a Single Stage In MongoDB"
+tags: "mongodb, aggregation"
 ---
 
 Recently, I had to add pagination feature to our website (our data resides in MongoDB). I wanted to define a single MongoDB aggregation pipeline which would fetch the required data (products) based on the criteria the user selects for the `n`-th page. But I also wanted the aggregation to return the total amount of products matched in the same aggregation. The last part turned out a bit tricky.

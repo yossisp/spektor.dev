@@ -2,6 +2,7 @@
 title: "Javascript Regular Expressions Objects Gotchas"
 date: 2020-09-25T10:39:03.284Z
 description: "Javascript Regular Expressions Objects Gotchas"
+tags: "javascript, regex"
 ---
 
 I recently came across an interesting behavior when working with regular expressions (regex) in Javascript. I came across the following piece of code:

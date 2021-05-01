@@ -2,6 +2,7 @@
 title: "GraphQL Resolvers Middleware and Apollo Server Plugins"
 date: 2020-04-04T11:58:03.284Z
 description: "The post provides examples for possible GraphQL resolvers middleware and explains host to use Apollo Server plugins or extensions."
+tags: "graphql, apollo-server, middleware"
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;">

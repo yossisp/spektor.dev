@@ -2,6 +2,7 @@
 title: "How to Deploy Your Dockerized Application to AWS Elastic Beanstalk"
 date: 2020-12-25T15:27:03.284Z
 description: "How to Deploy Your Dockerized Application to AWS Elastic Beanstalk"
+tags: "docker, aws, elastic-beanstalk"
 ---
 
 Dockerizing applications has become the norm: it allows for easy, reproducible deploys on numerous CI/CD platforms. A common workflow is to push docker images to a docker registry, for example, [Docker Hub](https://hub.docker.com) which is free, then have the deployment platform pull the image from the registry and deploy it. In this article I will explain how to deploy a dockerized application to [Elastic Beanstalk (EB)](https://aws.amazon.com/elasticbeanstalk/) which is an Amazon Web Services (AWS) platform used to manage docker containers. The article assumes you already have an AWS account. If you don't you can [create](https://aws.amazon.com/free/?all-free-tier.sort-by=item.additionalFields.SortRank&all-free-tier.sort-order=asc) one for free.

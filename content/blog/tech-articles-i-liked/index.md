@@ -2,6 +2,7 @@
 title: "Tech Articles I Really Liked"
 date: 2021-01-01T19:37:03.284Z
 description: "The Tech Articles I Really Liked"
+tags: "misc"
 ---
 
 Every once in a while I come across I really great tech article or video which offers great insights, sheds light on obscure matters or simply made a big impression on me. I'd like to share such articles/videos below with a brief summary (I will be updating the list occasionally).

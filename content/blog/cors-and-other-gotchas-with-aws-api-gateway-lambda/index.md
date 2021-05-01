@@ -2,6 +2,7 @@
 title: "How to Configure CORS in AWS API Gateway with Lambda And Other Gotchas"
 date: 2021-04-16T09:41:03.284Z
 description: "How to Configure CORS in AWS API Gateway with Lambda And Other Gotchas"
+tags: "cors, aws, serverless"
 ---
 
 I recently had a project where I had a website which used a REST API comprised of just one endpoint, which performed a very simple task. This is a great use case for a serverless function, like [AWS Lambda](https://aws.amazon.com/lambda).

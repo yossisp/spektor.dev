@@ -2,6 +2,7 @@
 title: "MongoDB vs SQL: Sorting"
 date: 2020-12-05T15:31:03.284Z
 description: "MongoDB vs SQL: Sorting"
+tags: "mongodb, sql, sorting"
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;padding-bottom:50px;">

@@ -2,6 +2,7 @@
 title: "Simple Pagination In React Or How To Implement Infinite Scroll"
 date: 2020-05-29T11:15:03.284Z
 description: "Simple Pagination In React Or How To Implement Infinite Scroll"
+tags: "react, infinite-scroll, tutorial"
 ---
 
 Often times a website needs to implement some kind of pagination solution, for example if a list of products is displayed and all products can't be shown at once (for performance or other reasons). Firstly, standard button-based pagination can be used (as in Amazon.com for example). However, implementing such pagination can be a bit tricky for the sheer number of edge cases, especially if you want to implement `...` functionality in pagination. That is, say, there're 20 pages in total and you want to display the pagination as follows: `1 2 3 ... 20`.

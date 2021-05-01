@@ -2,6 +2,7 @@
 title: "How to Create a Simple Slideshow Component in React"
 date: 2020-08-28T09:41:03.284Z
 description: "How to Create a Simple Slideshow Component in React"
+tags: "react, slideshow, tutorial"
 ---
 
 I recently had to create a slidehow component, something along [these](https://react-slideshow.herokuapp.com/fade-effect) lines. I was surprised how easy it is to create such a component and would like to share an example below. In the example I will be concentrating on logic more rather than on the UI design.

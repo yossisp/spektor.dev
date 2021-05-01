@@ -2,6 +2,7 @@
 title: "Cookie-based Authentication + Apollo React Client Results in SSL Handshake Failure"
 date: 2020-02-29T19:19:03.284Z
 description: "TL;DR: handle host header with care."
+tags: "graphql, apollo-client, ssl, cookies"
 ---
 
 I recently was given a task to add user authentication to our website. It was decided to implement the authentication logic using [httpOnly](https://developer.mozilla.org/en-US/docs/Web/HTTP/Cookies) cookie. Client-side the browser will take care of passing the cookie of course so the only thing left was to pass the cookie header server-side. Headers can be passed to Apollo client in the [constructor](https://github.com/apollographql/apollo-client/blob/master/src/ApolloClient.ts#L40). The diagram below displays our technology stack:

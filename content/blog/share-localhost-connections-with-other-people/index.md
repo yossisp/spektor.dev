@@ -2,6 +2,7 @@
 title: "How To Share Your Localhost Connection To The Outer World"
 date: 2020-04-15T19:37:03.284Z
 description: "How To Share Your Localhost Connection To The Outer World By Openning a Tunnel"
+tags: "networking"
 ---
 
 In the times of coronavirus epidemic working remote has become the new norm for many of us. As a software engineer it's import for me to maintain excellent communication with product managers. Sometimes I want to share my work while it's still in intermediate stage to receive feedback or make sure we're on the same page. Specifically, I'm talking about sharing the developement server which runs on `localhost`. This is really handy because it gives the product manager the ability to check out the exact functionality they want to and however they want to.

@@ -2,6 +2,7 @@
 title: "Is MongoDB $lookup Really a Left Outer Join?"
 date: 2021-01-05T21:31:03.284Z
 description: "MongoDB $lookup Join Behavior (With $unwind)"
+tags: "mongodb, lookup"
 ---
 
 I had a case recently where I ran a [`$lookup`](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/#lookup-join-pipeline) stage in MongoDB aggregation. I had 2 collections: one which contains products (Product) and one which contains availability regions (Region). Each product may be available in certain regions, therefore Product documents have `regions` field which contains an array of regions the product is available in, for example:

@@ -2,6 +2,7 @@
 title: "How to Properly Invalidate Files Cached By AWS Cloudfont"
 date: 2020-09-25T10:39:03.284Z
 description: "How to Properly Invalidate Files Cached By AWS Cloudfont"
+tags: "aws, cache, cdn, cloudfront"
 ---
 
 <div style="display:flex;justify-content:center;padding-right:10%;padding-bottom:50px;padding-top:30px;">

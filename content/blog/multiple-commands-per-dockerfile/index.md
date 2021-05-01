@@ -2,6 +2,7 @@
 title: "How To Execute Multiple Commands Per Dockerfile"
 date: 2021-04-04T15:31:03.284Z
 description: "How To Execute Multiple Commands Per Dockerfile, How To Efficiently Dockerize .NET App"
+tags: "docker, .net"
 ---
 
 <div style="display:flex;justify-content:center;padding-right:10%;padding-bottom:50px;padding-top:30px;">
