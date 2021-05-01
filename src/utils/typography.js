@@ -10,6 +10,9 @@ Wordpress2016.overrideThemeStyles = () => {
     a: {
       color: colors.link,
     },
+    ".article-tags": {
+      font: "12px Merriweather, Georgia ,serif",
+    },
   }
 }
 

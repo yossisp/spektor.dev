@@ -1,8 +1,10 @@
 import React from "react"
 import { graphql } from "gatsby"
-import { Bio, SEO, Layout } from "components"
+import { Bio, SEO, Layout, Tags } from "components"
 import { Link } from "theme"
 import { rhythm } from "../utils/typography"
+
+const TAGS_DELIMITER = ", "
 
 const BlogIndex = ({ data, location }) => {
   const siteTitle = data.site.siteMetadata.title
@@ -14,6 +16,7 @@ const BlogIndex = ({ data, location }) => {
       <Bio />
       {posts.map(({ node }) => {
         const title = node.frontmatter.title || node.fields.slug
+        const tags = node.frontmatter.tags?.split(TAGS_DELIMITER)
         return (
           <article key={node.fields.slug}>
             <header>
@@ -25,6 +28,7 @@ const BlogIndex = ({ data, location }) => {
                 <Link to={node.fields.slug}>{title}</Link>
               </h3>
               <small>{node.frontmatter.date}</small>
+              <Tags tags={tags} />
             </header>
             <section>
               <Link to={node.fields.slug}>
@@ -63,6 +67,7 @@ export const pageQuery = graphql`
             date(formatString: "MMMM DD, YYYY")
             title
             description
+            tags
           }
         }
       }

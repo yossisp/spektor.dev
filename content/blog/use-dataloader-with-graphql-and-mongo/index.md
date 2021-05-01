@@ -2,6 +2,7 @@
 title: "How To Solve GraphQL N+1 Problem By Using Custom Dataloaders"
 date: 2021-05-1T11:41:03.284Z
 description: "How To Solve GraphQL N+1 Problem Using Dataloader and Using MongoDB"
+tags: "mongodb, graphql, optimization, dataloader"
 ---
 
 Many have heard about the famous N+1 problem in GraphQL. It often occurs when queries include relationships between entities, especially child-parent. For example, let's say we want to make a GraphQL query for a list of purchases and the buyers in some supermarket.
