@@ -1,6 +1,6 @@
 ---
 title: "How to Configure CORS in AWS API Gateway with Lambda And Other Gotchas"
-date: "2021-04-16T09:41:03.284Z"
+date: 2021-04-16T09:41:03.284Z
 description: "How to Configure CORS in AWS API Gateway with Lambda And Other Gotchas"
 ---
 

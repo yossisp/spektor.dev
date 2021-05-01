@@ -1,6 +1,6 @@
 ---
 title: "How to Properly Invalidate Files Cached By AWS Cloudfont"
-date: "2020-09-25T10:39:03.284Z"
+date: 2020-09-25T10:39:03.284Z
 description: "How to Properly Invalidate Files Cached By AWS Cloudfont"
 ---
 

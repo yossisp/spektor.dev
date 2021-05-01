@@ -1,6 +1,6 @@
 ---
 title: "The Curious Case of Git, macOS Filesystem and Case Sensitivity"
-date: "2020-03-21T19:19:03.284Z"
+date: 2020-03-21T19:19:03.284Z
 description: "Case Sensitivity on macOS Filesystem and in Git"
 ---
 

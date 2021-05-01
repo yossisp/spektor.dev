@@ -1,6 +1,6 @@
 ---
 title: "Tech Articles I Really Liked"
-date: "2021-01-01T19:37:03.284Z"
+date: 2021-01-01T19:37:03.284Z
 description: "The Tech Articles I Really Liked"
 ---
 

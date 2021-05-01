@@ -1,6 +1,6 @@
 ---
 title: "Accessing Parent Methods in Javascript Classes"
-date: "2020-12-05T11:12:04.284Z"
+date: 2020-12-05T11:12:04.284Z
 description: "Accessing Parent Methods in Javascript Classes"
 ---
 

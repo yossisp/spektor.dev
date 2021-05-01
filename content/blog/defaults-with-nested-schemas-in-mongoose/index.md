@@ -1,6 +1,6 @@
 ---
 title: "How To Add Defaults In Mongoose Nested Schemas"
-date: "2020-07-10T14:27:03.284Z"
+date: 2020-07-10T14:27:03.284Z
 description: "How To Add Defaults In Mongoose Nested Schemas"
 ---
 

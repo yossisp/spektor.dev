@@ -1,6 +1,6 @@
 ---
 title: "MongoDB vs SQL: Sorting"
-date: "2020-12-05T15:31:03.284Z"
+date: 2020-12-05T15:31:03.284Z
 description: "MongoDB vs SQL: Sorting"
 ---
 

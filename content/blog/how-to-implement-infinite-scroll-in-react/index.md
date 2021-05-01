@@ -1,6 +1,6 @@
 ---
 title: "Simple Pagination In React Or How To Implement Infinite Scroll"
-date: "2020-05-29T11:15:03.284Z"
+date: 2020-05-29T11:15:03.284Z
 description: "Simple Pagination In React Or How To Implement Infinite Scroll"
 ---
 

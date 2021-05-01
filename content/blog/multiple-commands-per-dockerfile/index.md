@@ -1,6 +1,6 @@
 ---
 title: "How To Execute Multiple Commands Per Dockerfile"
-date: "2021-04-04T15:31:03.284Z"
+date: 2021-04-04T15:31:03.284Z
 description: "How To Execute Multiple Commands Per Dockerfile, How To Efficiently Dockerize .NET App"
 ---
 

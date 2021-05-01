@@ -1,6 +1,6 @@
 ---
 title: "How To Set Up prisma.io With Existing Mongodb Database"
-date: "2020-03-27T19:19:03.284Z"
+date: 2020-03-27T19:19:03.284Z
 description: "How To Set Up prisma.io With Existing Mongodb Database"
 ---
 

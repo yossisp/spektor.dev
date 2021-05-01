@@ -1,6 +1,6 @@
 ---
 title: "How to Create a Simple Slideshow Component in React"
-date: "2020-08-28T09:41:03.284Z"
+date: 2020-08-28T09:41:03.284Z
 description: "How to Create a Simple Slideshow Component in React"
 ---
 

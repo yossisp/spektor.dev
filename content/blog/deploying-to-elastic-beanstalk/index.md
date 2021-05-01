@@ -1,6 +1,6 @@
 ---
 title: "How to Deploy Your Dockerized Application to AWS Elastic Beanstalk"
-date: "2020-12-25T15:27:03.284Z"
+date: 2020-12-25T15:27:03.284Z
 description: "How to Deploy Your Dockerized Application to AWS Elastic Beanstalk"
 ---
 

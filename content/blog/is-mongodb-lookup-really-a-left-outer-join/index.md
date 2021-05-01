@@ -1,6 +1,6 @@
 ---
 title: "Is MongoDB $lookup Really a Left Outer Join?"
-date: "2021-01-05T21:31:03.284Z"
+date: 2021-01-05T21:31:03.284Z
 description: "MongoDB $lookup Join Behavior (With $unwind)"
 ---
 

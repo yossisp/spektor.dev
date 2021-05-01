@@ -1,6 +1,6 @@
 ---
 title: "How To Write an HTTP Request Utility in Go"
-date: "2020-10-10T15:31:03.284Z"
+date: 2020-10-10T15:31:03.284Z
 description: "How To Write an HTTP Request Utility in Go"
 ---
 

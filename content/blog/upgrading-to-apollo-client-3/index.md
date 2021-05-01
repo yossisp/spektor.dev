@@ -1,6 +1,6 @@
 ---
 title: "Upgrading From Apollo Boost to Apollo Client 3"
-date: "2020-08-28T11:41:03.284Z"
+date: 2020-08-28T11:41:03.284Z
 description: "Upgrading From Apollo Boost to Apollo Client 3"
 ---
 

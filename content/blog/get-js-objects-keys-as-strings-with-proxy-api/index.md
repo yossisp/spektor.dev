@@ -1,6 +1,6 @@
 ---
 title: "How To Programmatically Get Javascript Objects Key Names Using Proxy API"
-date: "2020-07-17T15:31:03.284Z"
+date: 2020-07-17T15:31:03.284Z
 description: "How To Programmatically Get Javascript Objects Key Names Using Proxy API"
 ---
 

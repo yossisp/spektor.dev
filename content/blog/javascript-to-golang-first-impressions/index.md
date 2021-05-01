@@ -1,6 +1,6 @@
 ---
 title: "Javascript to Golang: First Impressions"
-date: "2020-11-20T15:31:03.284Z"
+date: 2020-11-20T15:31:03.284Z
 description: "First Impressions of Golang From a Javascript Developer"
 ---
 

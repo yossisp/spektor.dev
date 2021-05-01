@@ -1,6 +1,6 @@
 ---
 title: "Filtering Values In Nested Arrays In MongoDB"
-date: "2020-12-25T14:27:03.284Z"
+date: 2020-12-25T14:27:03.284Z
 description: "How To Filter Values In Nested Arrays In MongoDB"
 ---
 

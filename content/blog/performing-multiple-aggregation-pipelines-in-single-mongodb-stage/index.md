@@ -1,6 +1,6 @@
 ---
 title: "How To Perform Multiple Aggregation Pipelines Within a Single Stage In MongoDB"
-date: "2020-05-22T19:15:03.284Z"
+date: 2020-05-22T19:15:03.284Z
 description: "How To Perform Multiple Aggregation Pipelines Within a Single Stage In MongoDB"
 ---
 
