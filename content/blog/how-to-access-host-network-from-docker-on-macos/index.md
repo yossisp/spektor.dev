@@ -12,12 +12,10 @@ tags: "docker, linux, vm"
             style="margin:0;"
             />
     </div>
-        <span style="font-size: 64px;padding-left:16px;padding-right:16px;">+</span>
-    <div style="width:20%;">
+    <div style="width:20%;padding-left: 16px;">
     <img src="linux.png"
         alt="Linux Logo"
         /></div>
-        <span style="font-size: 64px;padding-left:16px;padding-right:16px;">+</span> 
         <span style="font-size: 32px;padding-left:16px;padding-right:16px;">macOS</span>
     </div>
     
