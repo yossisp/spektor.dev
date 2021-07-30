@@ -1,8 +1,8 @@
 ---
 title: "How To Stream MongoDB Changes To Elasticsearch (via Kafka)"
-date: 2021-30-07T11:41:03.284Z
+date: 2021-07-30T11:41:03.284Z
 description: "How To Stream MongoDB Changes To Kafka, How To Connect MongoDB and Kafka, How To Connect MongoDB and Elasticsearch"
-tags: "MongoDB, kafka, debezium"
+tags: "mongodb, kafka, debezium"
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;padding-bottom:32px;">
