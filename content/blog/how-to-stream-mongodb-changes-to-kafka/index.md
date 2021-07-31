@@ -2,7 +2,7 @@
 title: "How To Stream MongoDB Changes To Elasticsearch (via Kafka)"
 date: 2021-07-30T11:41:03.284Z
 description: "How To Stream MongoDB Changes To Kafka, How To Connect MongoDB and Kafka, How To Connect MongoDB and Elasticsearch"
-tags: "mongodb, kafka, debezium"
+tags: "mongodb, kafka, elasticsearch, debezium"
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;padding-bottom:32px;">
@@ -13,7 +13,7 @@ tags: "mongodb, kafka, debezium"
             />
     </div>
         <span style="font-size: 64px;padding-left:16px;padding-right:32px;">+</span>
-    <div style="width:30%;padding-top:32px;">
+    <div style="width:50%;padding-top:32px;">
     <img src="elasticsearch_logo.svg"
         alt="Apollo Logo"
         />
@@ -25,13 +25,13 @@ tags: "mongodb, kafka, debezium"
 
 <a name="why"></a>I recently had to stream all changes (insertions/updates/deletions) from MongoDB to Elasticsearch in order to allow users to search the most up-to-date data. In addition I needed to transform MongoDB documents before inserting them into Elasticsearch, and many of those transformations weren't trivial. There're several options to do this which include [Logstash](https://www.elastic.co/logstash/) and [MongoDB River Plugin for ElasticSearch](https://github.com/richardwilly98/elasticsearch-river-MongoDB). Logstash is an official component of ELK stack which is nice but it has its own syntax for modifying documents which requires a certain learning curve. MongoDB River plugin is an [Elasticsearch plugin](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-plugins.html) which also allows document [transformations](https://github.com/richardwilly98/elasticsearch-river-MongoDB/wiki) although it seems that the transformations are more along the likes of including/excluding specific fields in a document. It also requires a relatively complicated setup to enable transformations. All of the above solutions require MongoDB to be started as a replica set because then MongoDB creates a special collection called `oplog` under `local` database. The oplog contains all document changes from any collection and is therefore used by the tools above to monitor for MongoDB document changes.
 
-There's also a 3rd option: Kafka connector! The advantage of Kafka connector is that it will stream document changes to a Kafka topic which can then be consumed by a Kafka client in a language of your choice. Once I have access to the changed document I can easily apply all the transformations I need using my programming language and then insert/delete the document into Elasticsearch. A popular connector for this use case is [Debezium](https://debezium.io/) which supports streaming changes from a number of databases including MongoDB. There's an official Debezium [tutorial](https://debezium.io/documentation/reference/1.6/connectors/MongoDB.html) for connecting to MongoDB but I'd like to share a more straightforward guide to performing the setup. While the tutorial is great and I encourage everyone to read it to get a better understanding of Debezium I think I can offer a simplified version of the tutorial which will also cover common pitfalls of the setup.
+There's also a 3rd option: Kafka connector! The advantage of Kafka connector is that it will stream document changes to a Kafka topic which can then be consumed by a Kafka client in a language of your choice. Once I have access to the changed document I can easily apply all the transformations I need using the programming language of my choice and then insert/delete the document into Elasticsearch. A popular connector for this use case is [Debezium](https://debezium.io/) which supports streaming changes from a number of databases including MongoDB. There's an official Debezium [tutorial](https://debezium.io/documentation/reference/1.6/connectors/MongoDB.html) for connecting to MongoDB but I'd like to share a more straightforward guide to performing the setup. While the tutorial is great and I encourage everyone to read it to get a better understanding of Debezium I think I can offer a simplified version of the tutorial where I explain some of the assumptions made in the original tutorial.
 
 <a name="tutorial"></a>First of all:
 
 > Debezium is built on top of Apache Kafka and provides Kafka Connect compatible connectors that monitor specific database management systems.
 
-[Kafka Connect](https://kafka.apache.org/documentation/#connect) is an open-source tool to ingest data from data systems (e.g. databases) and to stream changes to data systems. When data is ingested a source connector is used, when data is streamed sink connector is used. Kafka connectors and by extension Debezium are managed via REST API.
+[Kafka Connect](https://kafka.apache.org/documentation/#connect) is an open-source tool to ingest data from data systems (e.g. databases) and to stream changes to data systems. When data is ingested a source connector is used, when data is streamed sink connector is used. Kafka connectors and by extension Debezium are managed via REST API. In our case a source connector will be used.
 
 Debezium also requires MongoDB to be run as a replica set. If you use a standalone Mondodb instance you can easily [convert](https://docs.MongoDB.com/v4.0/tutorial/convert-standalone-to-replica-set/) it to replica. I also had to convert mine and I'll use a minimal setup MongoDB docker image for the tutorial:
 
@@ -108,11 +108,11 @@ services:
         - "mongo"
 ```
 
-Once the file is created `docker-compose up` can be run from the same directory as the file. Notice that Debezium configuration contains several environment variables which are Kafka Connect variables. They can be found in the [docs](https://kafka.apache.org/documentation/#connect) by their namesakes: `config.storage.topic`, `offset.storage.topic`, `status.storage.topic` etc. These topics require specific configuration which is mentioned in the [docs](https://kafka.apache.org/documentation/#connect). Debezium will attempt to auto create the topics if your Kafka broker allows it. You can check if the topics were created with Debezium required settings in Kafdrop at `localhost:9000`:
+Once the file is created `docker-compose up` can be run from the same directory as the file. Notice that Debezium configuration contains several environment variables which are Kafka Connect variables. They can be found in the [docs](https://kafka.apache.org/documentation/#connect) by their namesakes: `config.storage.topic`, `offset.storage.topic`, `status.storage.topic` etc. These topics require specific configuration which is mentioned in the [docs](https://kafka.apache.org/documentation/#connect). Debezium will attempt to auto create the topics if your Kafka broker allows it. You can check if the topics were created with the required settings in Kafdrop at `localhost:9000`:
 
 ![upload new configuration](./kafdrop.png)
 
-else the topics must be created manually with the required settings via a Kafka admin client of your choice.
+else the topics must be created manually with via a Kafka admin client of your choice.
 
 What is left is to connect Debezium to MongoDB. Firstly, Debezium requires a certain set of permissions to access oplog collection. A user can be created for this purpose in mongo shell. Run `docker exec -it mongo /bin/bash`. Once inside the container execute `mongo` command to start mongo shell. Run the following command:
 
@@ -127,7 +127,7 @@ db.createUser(
 );
 ```
 
-Now a Debezium connector needs to created via Kafka Connect REST API (below is a CURL command which can be executed in terminal):
+Now a Debezium connector needs to be created via Kafka Connect REST API (below is a CURL command which can be executed in terminal):
 
 ```bash
 curl --location --request POST 'http://localhost:8083/connectors' \
@@ -145,7 +145,7 @@ curl --location --request POST 'http://localhost:8083/connectors' \
 }'
 ```
 
-The keys in the POST body JSON object are Debezium [properties](https://debezium.io/documentation/reference/1.6/connectors/MongoDB.html#MongoDB-connector-properties). `monngodb.hosts` value is `mongo:27017` because both Debezium and MongoDB are run inside docker containers and docker allows one docker service to refer to another service via `servicename:port` convention (provided that the containers are on the same docker network which they are in our case because docker-compose automatically creates one). Because the name of the MongoDB service is `mongo` and the database runs on port `27017` it can be accessed on the network by `mongo:27017` address.
+The object keys in the POST body JSON object are Debezium [properties](https://debezium.io/documentation/reference/1.6/connectors/MongoDB.html#MongoDB-connector-properties). `monngodb.hosts` value is `mongo:27017` because both Debezium and MongoDB are run inside docker containers and docker allows one docker service to refer to another service via `servicename:port` convention (provided that the containers are on the same docker network which they are in our case because docker-compose automatically creates one). Because the name of the MongoDB service is `mongo` and the database runs on port `27017` it can be accessed on the network by `mongo:27017` address.
 
 Let's create some data in the same mongo shell that we opened earlier:
 
@@ -164,4 +164,4 @@ After clicking the topic a message will be seen which will contain data referrin
 
 The created document can be accessed under the Kafka message value `payload.after` key for insertions and under `payload.patch` key for updates.
 
-At this point a Kafka consumer can be started to consume messages from `mongoconnector.testdb.products` topic, perform the necessary transformations and insert the resulting documents into Elasticsearch (🔥).
+At this point a Kafka consumer can be started to consume messages from `mongoconnector.testdb.products` topic, perform the necessary transformations and insert the resulting documents into Elasticsearch (🔥). Specific databases/collections can be defined to be monitored, these settings can be found in Debezium [docs](https://debezium.io/documentation/reference/1.6/connectors/MongoDB.html#MongoDB-connector-properties).
