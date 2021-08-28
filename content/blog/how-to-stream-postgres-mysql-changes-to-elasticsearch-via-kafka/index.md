@@ -25,7 +25,7 @@ tags: "postgres, mysql, kafka, elasticsearch, debezium, cdc"
 
 This is the second post from [change data capture](https://en.wikipedia.org/wiki/Change_data_capture) series. You can read more about the motivation and introduction into Debezium in the [previous post](https://www.spektor.dev/how-to-stream-mongodb-changes-to-kafka/).
 
-In this post I will show how to set up Debezium with Postgres and MySQL databases. As in the [previous post](https://www.spektor.dev/how-to-stream-mongodb-changes-to-kafka/) the prerequisites are Debezium and Kafka images. Postgres and MySQL official images will be used:
+In this post I will show how to set up Debezium with Postgres and MySQL databases. As in the [previous post](https://www.spektor.dev/how-to-stream-mongodb-changes-to-kafka/) the prerequisites are Debezium and Kafka images. Postgres and MySQL official images will be used in the `docker-compose.yml` below:
 
 ```yml
 version: "3"
