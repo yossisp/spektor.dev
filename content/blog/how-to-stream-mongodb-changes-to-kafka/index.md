@@ -2,20 +2,20 @@
 title: "How To Stream MongoDB Changes To Elasticsearch (via Kafka)"
 date: 2021-07-30T11:41:03.284Z
 description: "How To Stream MongoDB Changes To Kafka, How To Connect MongoDB and Kafka, How To Connect MongoDB and Elasticsearch"
-tags: "mongodb, kafka, elasticsearch, debezium"
+tags: "mongodb, kafka, elasticsearch, debezium, cdc"
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;padding-bottom:32px;">
     <div style="width:30%;">
         <img src="apache_kafka_logo.svg"
-            alt="GraphQL Logo"
+            alt="Kafka Logo"
             style="margin:0;"
             />
     </div>
         <span style="font-size: 64px;padding-left:16px;padding-right:32px;">+</span>
     <div style="width:50%;padding-top:32px;">
     <img src="elasticsearch_logo.svg"
-        alt="Apollo Logo"
+        alt="Elasticsearch Logo"
         />
     </div>
 </div>
@@ -31,7 +31,7 @@ There's also a 3rd option: Kafka connector! The advantage of Kafka connector is 
 
 > Debezium is built on top of Apache Kafka and provides Kafka Connect compatible connectors that monitor specific database management systems.
 
-[Kafka Connect](https://kafka.apache.org/documentation/#connect) is an open-source tool to ingest data from data systems (e.g. databases) and to stream changes to data systems. When data is ingested a source connector is used, when data is streamed sink connector is used. Kafka connectors and by extension Debezium are managed via REST API. In our case a source connector will be used.
+[Kafka Connect](https://kafka.apache.org/documentation/#connect) is an open-source tool to ingest data from data systems (e.g. databases) and to stream changes to data systems. When data is ingested into Kafka a source connector is used, when data is streamed from Kafka sink connector is used. Kafka connectors and by extension Debezium are managed via REST API. We will use a source connector in order to stream database changes to a Kafka topic.
 
 Debezium also requires MongoDB to be run as a replica set. If you use a standalone Mondodb instance you can easily [convert](https://docs.MongoDB.com/v4.0/tutorial/convert-standalone-to-replica-set/) it to replica. I also had to convert mine and I'll use a minimal setup MongoDB docker image for the tutorial:
 
