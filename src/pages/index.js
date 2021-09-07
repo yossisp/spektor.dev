@@ -17,6 +17,8 @@ const BlogIndex = ({ data, location }) => {
       {posts.map(({ node }) => {
         const title = node.frontmatter.title || node.fields.slug
         const tags = node.frontmatter.tags?.split(TAGS_DELIMITER)
+        const excerpt = node.frontmatter.excerpt || node.excerpt
+
         return (
           <article key={node.fields.slug}>
             <header>
@@ -35,7 +37,7 @@ const BlogIndex = ({ data, location }) => {
                 <p
                   style={{ color: "hsla(0,0%,0%,0.9)" }}
                   dangerouslySetInnerHTML={{
-                    __html: node.excerpt,
+                    __html: excerpt,
                   }}
                 />
               </Link>
@@ -68,6 +70,7 @@ export const pageQuery = graphql`
             title
             description
             tags
+            excerpt
           }
         }
       }

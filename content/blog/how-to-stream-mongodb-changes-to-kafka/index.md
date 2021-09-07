@@ -3,6 +3,7 @@ title: "How To Stream MongoDB Changes To Elasticsearch (via Kafka)"
 date: 2021-07-30T11:41:03.284Z
 description: "How To Stream MongoDB Changes To Kafka, How To Connect MongoDB and Kafka, How To Connect MongoDB and Elasticsearch"
 tags: "mongodb, kafka, elasticsearch, debezium, cdc"
+excerpt: "I recently had to stream all changes (insertions/updates/deletions) from MongoDB to Elasticsearch in order to allow users to search the most up-to-date data. In addition I needed to transform MongoDB documents..."
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;padding-bottom:32px;">

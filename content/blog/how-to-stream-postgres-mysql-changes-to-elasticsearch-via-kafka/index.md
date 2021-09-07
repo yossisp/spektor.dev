@@ -3,6 +3,7 @@ title: "How To Stream Postgres, MySQL Changes To Elasticsearch (via Kafka)"
 date: 2021-08-28T11:41:03.284Z
 description: "How To Stream Postgres, MySQL Changes To Kafka, How To Connect Postgres, MySQL and Kafka, How To Connect Postgres and Elasticsearch"
 tags: "postgres, mysql, elasticsearch, debezium"
+excerpt: "This is the second post from change data capture series. You can read more about the motivation and introduction into Debezium in the previous post. In this post I will show how to set up Debezium with Postgres and MySQL..."
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;padding-bottom:32px;">
