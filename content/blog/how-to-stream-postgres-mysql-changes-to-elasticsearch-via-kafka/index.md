@@ -141,6 +141,16 @@ As you may have noticed the docker command for Postgres container is `sleep`. Th
 - Click on "SQL Command" and run this query: `SHOW wal_level;`. This will show `replica` but what we need is `logical`. Therefore run again: `ALTER SYSTEM SET wal_level = logical;`
 - Restart Postgres process by killing it and running again `/usr/local/bin/docker-entrypoint.sh -c 'shared_buffers=256MB' -c 'max_connections=200'`
 - Verify that `SHOW wal_level;` now returns `logical`
+- Sometimes changes in the databases you don't want to monitor happen much more frequently than changes in the databases you want to monitor. Since WAL is shared among all databases Debezium can't confirm the [LSN](https://www.postgresql.org/docs/9.4/datatype-pg-lsn.html) because the database that Debezium monitors didn't receive an event for a period of time. This will cause WAL to grow considerably and eventually the instance may run out of storage (this can easily happen on AWS RDS Postgres instances because of many system database writes). In order to prevent such scenario we will create a heartbeat table for the sole purpose of allowing Debezium to make changes to it every `heartbeat.interval.ms` milliseconds. This will ensure that even in the case there haven't been any changes in the database monitored Debezium will still periodically confirm the LSN and WAL will not cause out of storage issues. To create the table:
+
+```sql
+CREATE TABLE IF NOT EXISTS debezium_heartbeat (
+	id serial PRIMARY KEY,
+	heartbeat_text VARCHAR (15)
+);
+```
+
+Next we'll set the `heartbeat.action.query` to the actual change for Debezium to make: `INSERT INTO debezium_heartbeat (heartbeat_text) VALUES ('test_heartbeat')`.
 
 The last step is to create the Debezium connector:
 
@@ -157,10 +167,17 @@ curl --location --request POST 'http://localhost:8083/connectors' \
         "database.password": "postgres",
         "database.dbname": "postgres",
         "database.server.name": "postgres-server-name",
-        "plugin.name": "pgoutput"
+        "plugin.name": "pgoutput",
+        "schema.include.list": "yourSchema",
+        "table.include.list": "yourCommaSeparatedTables",
+        "publication.autocreate.mode": "filtered",
+        "heartbeat.action.query": "INSERT INTO debezium_heartbeat (heartbeat_text) VALUES ('test_heartbeat')",
+        "heartbeat.interval.ms": "300000"
     }
 }'
 ```
+
+- `publication.autocreate.mode` only applies if `pgoutput` plugin is used and it's quite important. By default, when using `pgoutput` Debezium will create a [publication](https://www.postgresql.org/docs/10/logical-replication-publication.html) for **all** tables (unless the publication was already created with all the required settings and provided to Debezium via `publication.name` setting). If you want Debezium to create the publication only for the tables and schemas specified in `table.include.list` and `schema.include.list` parameters then `publication.autocreate.mode` must be set to `filtered`.
 
 We can now create a test table to verify that the connector works:
 
