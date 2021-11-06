@@ -216,7 +216,8 @@ curl --location --request POST 'http://localhost:8083/connectors' \
         "database.server.name": "mysql-server-name",
         "database.history.kafka.bootstrap.servers": "kafka:29092",
         "database.history.kafka.topic": "dbhistory.schema-changes",
-        "include.schema.changes": "false"
+        "include.schema.changes": "false",
+        "heartbeat.interval.ms": "300000"
     }
 }'
 ```
