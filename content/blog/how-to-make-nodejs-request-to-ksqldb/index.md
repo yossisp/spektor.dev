@@ -26,23 +26,27 @@ If you just want to quickly try out ksqlDB query API without delving into HTTP/2
 const fetch = require("node-fetch")
 const KSQLDB_QUERY_ENDPOINT = "http://localhost:8088/query"
 
-try {
-  const query = {
-    ksql: `SELECT * FROM test_view WHERE your_column='something';`,
-  }
-  const response = await fetch(KSQLDB_QUERY_ENDPOINT, {
-    method: "POST",
-    headers: {
-      Accept: "application/vnd.ksql.v1+json",
-    },
-    body: JSON.stringify(query),
-  })
+const main = async () => {
+  try {
+    const query = {
+      ksql: `SELECT * FROM test_view WHERE your_column='something';`,
+    }
+    const response = await fetch(KSQLDB_QUERY_ENDPOINT, {
+      method: "POST",
+      headers: {
+        Accept: "application/vnd.ksql.v1+json",
+      },
+      body: JSON.stringify(query),
+    })
 
-  const json = await response.json()
-  console.log("result", json)
-} catch (error) {
-  consoler.error(error)
+    const json = await response.json()
+    console.log("result", json)
+  } catch (error) {
+    consoler.error(error)
+  }
 }
+
+main()
 ```
 
 `EMIT CHANGES` type queries can also be run via this endpoint however they only fetch the state of the table as of the time of the request and do not update on subsequent changes.
