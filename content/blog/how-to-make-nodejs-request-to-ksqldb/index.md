@@ -2,7 +2,7 @@
 title: "How To Make Requests to ksqlDB in Node.js"
 date: 2021-11-13T19:41:03.284Z
 description: "How To Make Requests to ksqlDB in Node.js"
-tags: "ksqlDB, node.js, http2"
+tags: "ksqlDB, node.js, http2, kafka"
 excerpt: "ksqlDB is an amazing tool to make SQL queries on data stored in Kafka topics (and much more). It also has a handy REST API to make queries..."
 ---
 
