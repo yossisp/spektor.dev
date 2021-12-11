@@ -154,7 +154,7 @@ SELECT `country`, `product`, `purchases`
 FROM (
   SELECT *,
     ROW_NUMBER() OVER (PARTITION BY country ORDER BY `purchases` DESC) AS row_num
-  FROM (select country, product, count(*) as `purchases` from purchases group by country, product))
+  FROM (SELECT country, product, count(*) AS `purchases` FROM purchases GROUP BY country, product))
 WHERE row_num <= 3;
 ```
 
