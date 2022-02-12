@@ -3,6 +3,7 @@ title: "Introduction to Monitoring with Prometheus and Grafana"
 date: 2022-02-11T10:31:03.284Z
 description: "Introduction to Monitoring with Prometheus and Grafana"
 tags: "monitoring, prometheus, grafana"
+excerpt: "Prometheus is an open-source project which is both a monitoring system and a time-series database. It's a popular choice for monitoring services..."
 ---
 
 <div style="display:flex;align-items:center;padding-left:10%;padding-right:10%;padding-bottom:50px;">
