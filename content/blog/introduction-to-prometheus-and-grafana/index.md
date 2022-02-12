@@ -20,6 +20,8 @@ tags: "monitoring, prometheus, grafana"
     </div>
 </div>
 
+_The link to the github repo with the code:_ [link](https://github.com/yossisp/prometheus-grafana-tutorial).
+
 [Prometheus](https://prometheus.io) is an open-source project which is both a monitoring system and a time-series database. It's a popular choice for monitoring services, for example, it can be used to monitor metrics like CPU usage, heap consumption as well as business logic events (more on that later). Its time-series database also supports labels (e.g. metrics can be classified for example by mobile/desktop, client type etc.). Additional features include:
 
 - PromQL language which can be used to query for certain metrics/labels/perform aggregations etc.
