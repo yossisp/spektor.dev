@@ -22,11 +22,10 @@ excerpt: "There're multiple ways to pass sensitive data (access tokens/passwords
 
 There're multiple ways to pass sensitive data (access tokens/passwords etc.) to an instance of an application deployment, for example:
 
-- hardcoding their values in code.
 - environment variables/files.
 - using network (e.g. HTTPS requests) to get sensitive data.
 
-The problem with hardcoding is that if the source code is exposed the secrets will be exposed not mention that an application will have to be rebuilt and redeployed on secret change. Using network in theory is the safest method because the result of an HTTPS request which would return some secret is assigned to some local variable in application memory so an attacker can't easily retrieve it from the memory as opposed to using environment variables because if someone gains access to the deployment machine, then printing environment variables is as easy as running `env` command in Linux.
+Using network in theory is the safest method because the result of an HTTPS request which would return some secret is assigned to some variable in application memory so an attacker can't easily retrieve it from the memory as opposed to using environment variables because if someone gains access to the deployment machine, then printing environment variables is as easy as running `env` command in Linux.
 
 However, in the case the attacker gained access to the machine where the application runs (e.g. via SSH) they can easily perform a heap dump of the application memory. **Heap dumps in Java for example will contain the names of class methods, instance fields name and their values, static fields name and their values.** In addition the values of stack (local) variables are available, although their names according to my checks are not available.
 
