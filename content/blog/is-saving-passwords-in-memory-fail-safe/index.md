@@ -82,4 +82,12 @@ String secret = "some value";
 secret = null; // delete `some value`
 ```
 
-Because strings are immutable in Java, until the previous value of `secret` is garbage collected it will "live" in memory and may be accessed via heap dump. If on other hand if it was saved as `char` array, it could be effectively overwritten. Of course if a heap dump was performed before the `char` array variable was zeroed this still wouldn't prevent security leak.
+Because strings are immutable in Java, until the previous value of `secret` is garbage collected it will "live" in memory and may be accessed via heap dump. If on other hand if it was saved as `char` array, it could be effectively overwritten as such:
+
+```java
+char[] secret = new char[10];
+// copy secret data into `secret` array
+secret = null; // zero out the char array 
+```
+
+ Of course if a heap dump was performed before the `char` array variable was zeroed this still wouldn't prevent security leak.
