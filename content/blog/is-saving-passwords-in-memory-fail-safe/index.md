@@ -15,7 +15,7 @@ excerpt: "There're multiple ways to pass sensitive data (access tokens/passwords
 
 <span style="color:orange;text-decoration: underline;font-size:24px;">TL;DR:</span>
 
-1. If an attacker gains access to a deployment instance they can get access to secrets saved in memory by performing heap dump of the process.
+1. If an attacker gains access to a deployment instance they can get access to secrets saved in memory by performing a heap dump of the process.
 2. Saving secrets to `char` arrays in Java can possibly mitigate the risk but not prevent it completely.
 
 ------
