@@ -1,7 +1,7 @@
 ---
-title: "Vault Agent Docker Compose Example"
+title: "Vault Agent Docker Compose Setup"
 date: 2022-05-01T19:19:03.284Z
-description: "Vault Agent Docker Compose Example"
+description: "Vault Agent Docker Compose Setup"
 tags: "vault, docker"
 ---
 
