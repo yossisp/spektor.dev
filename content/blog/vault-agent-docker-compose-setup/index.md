@@ -3,6 +3,7 @@ title: "Vault Agent Docker Compose Setup"
 date: 2022-05-01T19:19:03.284Z
 description: "Vault Agent Docker Compose Setup"
 tags: "vault, docker"
+excerpt: "Recently I needed to integrate Hashicorp Vault with a Java application. For local development I wanted to use Vault Agent..."
 ---
 
 ![vault](./vault.jpg)
