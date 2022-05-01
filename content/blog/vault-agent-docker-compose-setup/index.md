@@ -7,6 +7,8 @@ tags: "vault, docker"
 
 ![vault](./vault.jpg)
 
+**TL;DR:** You can find the code in this Github [repo](https://github.com/yossisp/vault-agent-docker-compose).
+
 Recently I needed to integrate [Hashicorp Vault](https://www.hashicorp.com/products/vault) with a Java application. For local development I wanted to use [Vault Agent](https://www.vaultproject.io/docs/agent) which can connect to the Vault server. The advantage of using Vault Agent is that it bears the brunt of authentication complexity with Vault server (including SSL certificates). Effectively, this means that a client application can send HTTP requests to Vault Agent without any need to authenticate. This setup is frequently used in the real world for example by using [Agent Sidecar Injector](https://www.vaultproject.io/docs/platform/k8s/injector) inside a Kubernetes cluster. It makes it easy for client applications inside a K8s pod to get/put information to a Vault server without each one having to perform the tedious authentication process.
 
 Surprisingly, I couldn't find much information on using Vault with Vault Agent via docker-compose, which in my opinion is by far the easiest method to set up a Vault playground. I did find [this](https://gitlab.com/kawsark/vault-agent-docker/-/tree/master) example which involved a more complex setup as well as using Postgres and Nginx. I'd like to present the most minimal setup, the bare basics needed to spin up a Vault Agent and access it locally via `localhost`.
