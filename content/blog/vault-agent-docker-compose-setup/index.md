@@ -159,30 +159,35 @@ vault write -format=json -f auth/approle/role/dev-role/secret-id \
   | jq -r '.data.secret_id' > /helpers/secret_id
 ```
 
+Next we'll create `startVault.sh` script to start Vault:
+```shell
+WAIT_FOR_TIMEOUT=120 # 2 minutes
+docker-compose up --detach
+# wait for Vault Agent container to be up
+curl https://raw.githubusercontent.com/eficode/wait-for/v2.2.3/wait-for | sh -s -- localhost:8200 -t $WAIT_FOR_TIMEOUT -- echo success
+docker exec vault /bin/sh -c "source /helpers/init.sh"
+docker restart vault-agent
+```
+
 After you created the above files in the `helpers` directory, the project structure should be as follows:
 ```
 .
 ├── docker-compose.yml
-└── helpers
-    ├── admin-policy.hcl
-    ├── init.sh
-    └── vault-agent.hcl
+├── helpers
+│   ├── admin-policy.hcl
+│   ├── init.sh
+│   └── vault-agent.hcl
+└── startVault.sh
 ```
 
-Next run the following commands in terminal:
+Finally, run `source startVault.sh` to start Vault server and Vault Agent.
 
-1. `docker-compose up`
-2. `docker exec -it vault /bin/sh` - enter the Vault server container
-3. `source /helpers/init.sh` - the script initiates version 2 kv engine in Vault, creates an AppRole policy and generates the role id and secret id for the role, saving them in the corresponding files.
-4. `exit` - exit from the Vault server container
-5. `docker restart vault-agent` - restart the Vault Agent container to pick up the newly created `role_id` and `secret_id`.
-
-Now any client application can access Vault Agent over `http://localhost:8100` on the host machine (Vault server can be accessed at `http://localhost:8200`), for example the following command creates a secret name `hello`:
+Now any client application can access Vault Agent over `http://localhost:8200` on the host machine, for example the following command creates a secret name `hello`:
 ```shell
 curl --request POST -H "Content-Type: application/json"  \
---data '{"data":{"foo":"bar"}}' http://localhost:8100/v1/secret/data/hello
+--data '{"data":{"foo":"bar"}}' http://localhost:8200/v1/secret/data/hello
 ```
 while this command retrieves the secret name `hello`:
 ```shell
-curl http://localhost:8100/v1/secret/data/hello
+curl http://localhost:8200/v1/secret/data/hello
 ```
