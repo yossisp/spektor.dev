@@ -1,7 +1,7 @@
 ---
-title: "Vault Agent Docker Compose Setup"
+title: "Vault Agent (Persistent) Docker Compose Setup"
 date: 2022-05-01T19:19:03.284Z
-description: "Vault Agent Docker Compose Setup"
+description: "Vault Agent (Persistent) Docker Compose Setup"
 tags: "vault, docker"
 excerpt: "Recently I needed to integrate Hashicorp Vault with a Java application. For local development I wanted to use Vault Agent..."
 ---
@@ -25,31 +25,37 @@ services:
     image: hashicorp/vault:1.9.6
     restart: always
     ports:
-      - "8100:8200"
+      - "8200:8200"
     volumes:
       - ./helpers:/helpers
     environment:
       VAULT_ADDR: "http://vault:8200"
     container_name: vault-agent
     entrypoint: "vault agent -log-level debug -config=/helpers/vault-agent.hcl"
+    depends_on:
+      vault:
+        condition: service_healthy
   vault:
     image: hashicorp/vault:1.9.6
     restart: always
     volumes:
       - ./helpers:/helpers
-      - /vault/data
-      - /etc/vault/logs
+      - vault_data:/vault/file
     ports:
-      - "8200:8200/tcp"
-    environment:
-      VAULT_ADDR: http://localhost:8200
-      VAULT_TOKEN: root
-      VAULT_DEV_ROOT_TOKEN_ID: root
-      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+      - "8201:8200/tcp"
     cap_add:
       - IPC_LOCK
     container_name: vault
-    entrypoint: "vault server -dev"
+    entrypoint: "vault server -config=/helpers/vault-config.hcl"
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:8200 || exit 1
+      interval: 10s
+      retries: 12
+      start_period: 10s
+      timeout: 10s
+
+volumes:
+  vault_data: {}
 ```
 
 Here we're using the same image to start Vault server in dev mode as well as start the Vault Agent. In addition a volume is created for `helpers` directory which will contain:
@@ -118,12 +124,12 @@ pid_file = "./pidfile"
 vault {
   address = "http://vault:8200"
   retry {
-    num_retries = 5
+  num_retries = 5
   }
 }
 auto_auth {
   method {
-    type = "approle"
+  type = "approle"
     config = {
       role_id_file_path = "/helpers/role_id"
       secret_id_file_path = "/helpers/secret_id"
@@ -145,25 +151,61 @@ listener "tcp" {
 }
 ```
 3. The `init.sh` script which will create AppRole auth method:
-```shell
-apk add jq
+```bash
+apk add jq curl
 export VAULT_ADDR=http://localhost:8200
-export VAULT_TOKEN=root
-vault secrets enable -version=2 kv
-vault auth enable approle
-vault policy write admin-policy /helpers/admin-policy.hcl
-vault write auth/approle/role/dev-role token_policies="admin-policy"
-vault read -format=json auth/approle/role/dev-role/role-id \
-  | jq -r '.data.role_id' > /helpers/role_id
-vault write -format=json -f auth/approle/role/dev-role/secret-id \
-  | jq -r '.data.secret_id' > /helpers/secret_id
+root_token=$(cat /helpers/keys.json | jq -r '.root_token')
+unseal_vault() {
+  export VAULT_TOKEN=$root_token
+  vault operator unseal -address=${VAULT_ADDR} $(cat /helpers/keys.json | jq -r '.keys[0]')
+  vault login token=$VAULT_TOKEN
+}
+if [[ -n "$root_token" ]]
+  then
+      echo "Vault already initialized"
+      unseal_vault
+  else
+      echo "Vault not initialized"
+      curl --request POST --data '{"secret_shares": 1, "secret_threshold": 1}' http://127.0.0.1:8200/v1/sys/init > /helpers/keys.json
+      root_token=$(cat /helpers/keys.json | jq -r '.root_token')
+
+      unseal_vault
+
+      vault secrets enable -version=2 kv
+      vault auth enable approle
+      vault policy write admin-policy /helpers/admin-policy.hcl
+      vault write auth/approle/role/dev-role token_policies="admin-policy"
+      vault read -format=json auth/approle/role/dev-role/role-id \
+        | jq -r '.data.role_id' > /helpers/role_id
+      vault write -format=json -f auth/approle/role/dev-role/secret-id \
+        | jq -r '.data.secret_id' > /helpers/secret_id
+fi
+printf "\n\nVAULT_TOKEN=%s\n\n" $VAULT_TOKEN
+```
+
+4. Below is the config for the Vault server to be saved in `vault-config.hcl` file:
+
+```hcl
+storage "file" {
+  # this path is used so that volume can be enabled https://hub.docker.com/_/vault
+  path = "/vault/file"
+}
+
+listener "tcp" {
+  address     = "0.0.0.0:8200"
+  tls_disable = "true"
+}
+
+api_addr = "http://127.0.0.1:8200"
+cluster_addr = "https://127.0.0.1:8201"
+ui = true
 ```
 
 Next we'll create `startVault.sh` script to start Vault:
 ```shell
 WAIT_FOR_TIMEOUT=120 # 2 minutes
 docker-compose up --detach
-# wait for Vault Agent container to be up
+echo Waiting for Vault Agent container to be up
 curl https://raw.githubusercontent.com/eficode/wait-for/v2.2.3/wait-for | sh -s -- localhost:8200 -t $WAIT_FOR_TIMEOUT -- echo success
 docker exec vault /bin/sh -c "source /helpers/init.sh"
 docker restart vault-agent
@@ -176,7 +218,8 @@ After you created the above files in the `helpers` directory, the project struct
 ├── helpers
 │   ├── admin-policy.hcl
 │   ├── init.sh
-│   └── vault-agent.hcl
+│   ├── vault-agent.hcl
+│   └── vault-config.hcl
 └── startVault.sh
 ```
 
@@ -185,9 +228,13 @@ Finally, run `source startVault.sh` to start Vault server and Vault Agent.
 Now any client application can access Vault Agent over `http://localhost:8200` on the host machine, for example the following command creates a secret name `hello`:
 ```shell
 curl --request POST -H "Content-Type: application/json"  \
---data '{"data":{"foo":"bar"}}' http://localhost:8200/v1/secret/data/hello
+--data '{"data":{"foo":"bar"}}' http://localhost:8200/v1/kv/data/hello
 ```
 while this command retrieves the secret name `hello`:
 ```shell
-curl http://localhost:8200/v1/secret/data/hello
+curl http://localhost:8200/v1/kv/data/hello
 ```
+
+In addition Vault web UI is available at `http://localhost:8201/ui`. In order to log into the UI use the value of `root_token` field in `./helpers/key.json` file (using token login method in the UI).
+
+Vault server uses file storage backend which makes this a persistent setup (a docker volume is mounted), so that tokens data will persist after machine restart or running `docker-compose down`.
