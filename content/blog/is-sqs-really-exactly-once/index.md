@@ -24,4 +24,4 @@ The first thing to note here is the word __processing__. While Apache Kafka and 
 
 So if SQS FIFO queue producer is down for more than 5 minutes because there's a network issue and the same message is sent again then it actually **will become duplicate**. This certainly means that SQS FIFO queue can't be fully relied on to prevent duplicate messages. If you want to use SQS FIFO queues and your service needs to guarantee that the same message is not processed twice you must implement idemponent processing mechanism. For example, update database with messages that were processed and check database whether new message was already processed before acting on it.
 
-In my opinion SQS docs regarding exactly-once are a bit misleading, what do you think? Feel free to comment here.
+In my opinion SQS docs regarding exactly-once are a bit misleading, what do you think? Feel free to comment on [Twitter](https://twitter.com/SpektorYossi/status/1567970808999596033?s=20&t=cEtsZxyGOfAetuW4jo-CIg).
