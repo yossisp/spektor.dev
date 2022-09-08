@@ -1,7 +1,7 @@
 ---
 title: "Does AWS SQS Really Provide Exactly Once Guarantees?"
 date: 2022-09-08T19:19:03.284Z
-description: "Does Amazon (AWS) SQS Really Provide Exactly Once Guarantees?"
+description: "Does Amazon (AWS) SQS Really Provide Exactly Once Guarantee?"
 tags: "aws, sqs, message-queue, distributed"
 ---
 
