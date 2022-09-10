@@ -1,7 +1,7 @@
 ---
 title: "How To Add SQL Constraint Without Applying It To The Existing Rows in PostgreSQL"
 date: 2022-09-10T19:19:03.284Z
-description: "How to Add New SQL Constraint Without Applying It to the Existing Rows in PostgreSQL or how to apply SQL constraint only to future insertions or updates on rows"
+description: "How to Add New SQL Constraint Without Applying It to the Existing Rows in PostgreSQL. How to apply SQL constraint only to future insertions or updates on rows. How to defer SQL constraint evaluation."
 tags: "sql, postgresql, constraint, tip"
 ---
 
