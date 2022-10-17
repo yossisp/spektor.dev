@@ -3,7 +3,7 @@ title: "How To Set Up Dapr Pub-Sub With Dead Letter Queue In Java"
 date: 2022-10-17T19:19:03.284Z
 description: "How To Set Up Dapr Pub/Sub With Dead Letter Queue In Java, dapr pub-sub tutorial, dapr pub-sub intro."
 tags: "dapr, pub-sub, dead-letter-queue"
-excerpt: First of all, Dapr is an amazing open-source project which was initially started at Microsoft and is now part of Cloud Native Computing Foundation which abstracts away a lot of the implementation...
+excerpt: Dapr is an amazing open-source project which was initially started at Microsoft and is now part of Cloud Native Computing Foundation which abstracts away a lot of the implementation...
 ---
 
 <div style="display:flex;justify-content:center;padding-right:10%;padding-bottom:50px;padding-top:30px;">
@@ -18,9 +18,10 @@ excerpt: First of all, Dapr is an amazing open-source project which was initiall
 3. [Setting Up Redis Pub/Sub](#redis-pub-sub)
 4. [Setting Up Kafka Pub/Sub](#kafka-pub-sub)
 5. [Bonus](#bonus)
+6. [References](#references)
 
 ### <a name="why"></a>What is Dapr/Why Dapr?
-First of all, [Dapr](https://dapr.io) is an amazing open-source project which was initially started at Microsoft and is now part of Cloud Native Computing Foundation which abstracts away a lot of the implementation details of various infrastructure technologies when developing your application.
+[Dapr](https://dapr.io) is an amazing open-source project which was initially started at Microsoft and is now part of Cloud Native Computing Foundation which abstracts away a lot of the implementation details of various infrastructure technologies when developing your application.
 
 For example, say you have two microservices and you want to connect them via a message queue. Depending on the queue implementation chosen you will need to develop the necessary infrastructure. This process can be non-trivial if your company or team is small and mainly it distracts from the real purpose: developing the business logic of your application.
 
@@ -209,3 +210,11 @@ We can verify through the logs that the same scenario occurred as when using Red
  Dapr provides observability via [Zipkin](https://zipkin.io/). If you ran `dapr init` at the beginning of the tutorial, go to `localhost:9411` which is Zipkin UI and hit `Run query` to see that each message generated a trace.
 
  Also Dapr provides a nice dashboard where all services can be viewed, run this in Terminal: `dapr dashboard -p 8081` to explore.
+
+ ### <a name="references"></a>References
+ 1. [Initialize Dapr in your local environment](https://docs.dapr.io/getting-started/install-dapr-selfhost/)
+ 2. [Quickstart: Publish and Subscribe](https://docs.dapr.io/getting-started/quickstarts/pubsub-quickstart/)
+ 3. [List of Dapr-supported pub/sub brokers](https://docs.dapr.io/reference/components-reference/supported-pubsub/)
+ 4. [Dead Letter Topics in Dapr](https://docs.dapr.io/developing-applications/building-blocks/pubsub/pubsub-deadletter/)
+ 5. [Dapr Declarative and programmatic subscription methods](https://docs.dapr.io/developing-applications/building-blocks/pubsub/subscription-methods/)
+ 6. [Dapr pub/sub integration with Apache Kafka](https://docs.dapr.io/reference/components-reference/supported-pubsub/setup-apache-kafka/)
