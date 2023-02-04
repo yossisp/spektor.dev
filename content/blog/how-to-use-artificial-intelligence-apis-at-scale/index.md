@@ -52,7 +52,7 @@ curl -XPOST \
 ```
 
 Let's break down the request, there's a lot going on here:
-- `https://qstash.upstash.io/v1/publish/https://api.openai.com/v1/images/generations`: in order to have Qstash pass the request to OpenAI all we had to do was to concatenate the two URLs (!). That is `https://qstash.upstash.io/v1/publish` + the destination URL.
+- In order to have Qstash pass the request to OpenAI all we had to do was to concatenate Qstash URL (`https://qstash.upstash.io/v1/publish`) and the destination URL. That's it!
 - `Authorization: Bearer QSTASH_TOKEN` pass Qstash access token.
 - We can pass any custom headers to OpenAI via `Upstash-Forward-My-Custom-Header`. For example, in order to pass OpenAI API key we used `Upstash-forward-Authorization: Bearer OPENAI_API_KEY`.
 - `Upstash-Callback: myapp.com/callback` header defines the callback URL that Qstash should forward the OpenAI response to.
