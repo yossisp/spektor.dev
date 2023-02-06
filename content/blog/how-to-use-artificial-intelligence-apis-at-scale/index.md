@@ -1,5 +1,5 @@
 ---
-title: "How To Use Artificial Intelligence APIs At Scale"
+title: "How To Use Artificial Intelligence (AI) APIs At Scale"
 date: 2023-02-04T19:19:03.284Z
 description: "Learn how to use AI APIs at scale by using serverless functions to make asynchronous API requests"
 tags: "ai, serverless, qstash, performance"
