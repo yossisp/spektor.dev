@@ -1,5 +1,5 @@
 ---
-title: "From Java To Kotlin Or Why Kotlin Makes Developers Happy"
+title: "From Java To Kotlin Or 13 Features Which Make Kotlin Developers Happy"
 date: 2023-02-25T20:19:03.284Z
 description: "Learn about Kotlin main features and why it makes sense to switch from Java to Kotlin."
 tags: "kotlin, java, productivity"
