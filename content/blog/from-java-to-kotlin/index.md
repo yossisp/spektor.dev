@@ -1,5 +1,5 @@
 ---
-title: "Why Kotlin Makes Developers Happy"
+title: "From Java To Kotlin Or Why Kotlin Makes Developers Happy"
 date: 2023-02-25T20:19:03.284Z
 description: "Learn about Kotlin main features and why it makes sense to switch from Java to Kotlin."
 tags: "kotlin, java, productivity"
@@ -28,7 +28,8 @@ excerpt: Kotlin is a modern language which tries to simplify common actions whic
     11. [Readable Test Names](#readable-test-names)
     12. [Simple Builder Pattern Implemention](#simple-builder-pattern-implementation)
 3. [Concurrency](#concurrency)
-4. [Bonus](#bonus)
+4. [Does Project Loom Solve Java Concurrency?](#project-loom)
+5. [Bonus](#bonus)
 
 ### <a name="what-is-kotlin"></a>What Is Kotlin?
 
@@ -362,6 +363,19 @@ suspend fun channelSharedStateDemoGood() = coroutineScope {
         println("counter: $counter")
     }
 ```
+
+### <a name="project-loom"></a>Does Project Loom Solve Java Concurrency?
+Some may ask whether the upcoming [Project Loom for Java](https://blogs.oracle.com/javamagazine/post/java-loom-virtual-threads-platform-threads) solves concurrency issues in Java.
+While it does offer [virtual threads](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/lang/Thread.html#startVirtualThread(java.lang.Runnable)) as well as structured concurrency, it forces to write code using Java `Runnable`s which are essentially callbacks:
+```java
+Thread.startVirtualThread(() -> {
+    // code to be executed asynchronously
+});
+```
+The problem with this approach is that nested callbacks usually lead to [callback hell](https://stackoverflow.com/a/25098230) in the worst case scenario and not very readable code in the best case.
+In addition, using lambda functions in Java usually introduces [issues](https://stackoverflow.com/a/34866174) when using non-effectively final variables.
+Lastly, this feature was released in Java 19 and is still in preview mode.
+
 
 ### <a name="bonus"></a>Bonus
 1. Official Kotlin [playground](https://play.kotlinlang.org/).
