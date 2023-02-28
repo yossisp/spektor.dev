@@ -379,5 +379,9 @@ Lastly, this feature was released in Java 19 and is still in preview mode.
 
 ### <a name="bonus"></a>Bonus
 1. Official Kotlin [playground](https://play.kotlinlang.org/).
+2. Official language resources:
+    1. [Kotlin basics](https://kotlinlang.org/docs/basic-syntax.html)
+    2. [Hands-on coroutines tutorial](https://play.kotlinlang.org/hands-on/Introduction%20to%20Coroutines%20and%20Channels/01_Introduction)
+    3. [Comparison of asynchronous programming techniques](https://kotlinlang.org/docs/async-programming.html)
 2. When copying Java code into a Kotlin file IntelliJ will automatically convert a Java code to Kotlin.
 3. A great article [_What Color is Your Function?_](https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function/) comparing concurrency implementation in different languages.
