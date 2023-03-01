@@ -28,8 +28,10 @@ excerpt: Kotlin is a modern language which tries to simplify common actions whic
     11. [Readable Test Names](#readable-test-names)
     12. [Simple Builder Pattern Implemention](#simple-builder-pattern-implementation)
 3. [Concurrency](#concurrency)
-4. [Does Project Loom Solve Java Concurrency?](#project-loom)
-5. [Bonus](#bonus)
+    1. [Coroutines and Channels](#coroutines-and-channels)
+    2. [Handling CompletableFuture](#handling-completablefuture)
+    3. [Does Project Loom Solve Java Concurrency?](#project-loom)
+4. [Bonus](#bonus)
 
 ### <a name="what-is-kotlin"></a>What Is Kotlin?
 
@@ -253,6 +255,7 @@ fun main() {
 ```
 
 ### <a name="concurrency"></a>Concurrency
+#### <a name="coroutines-and-channels"></a>Coroutines and Channels
 Kotlin concurrency model is based on the concept of [communicating sequential processes](https://en.wikipedia.org/wiki/Communicating_sequential_processes#:~:text=In%20computer%20science%2C%20communicating%20sequential,on%20message%20passing%20via%20channels.) (CSP) introduced by Tony Hoare.
 It uses channels and coroutines (like Go). The motto is:
 >Do not communicate by sharing memory; instead, share memory by communicating.
@@ -364,7 +367,27 @@ suspend fun channelSharedStateDemoGood() = coroutineScope {
     }
 ```
 
-### <a name="project-loom"></a>Does Project Loom Solve Java Concurrency?
+#### <a name="handling-completablefuture"></a>Handling CompletableFuture
+If Java methods returning `CompletableFuture` are called then official Kotlin [dependency](https://mvnrepository.com/artifact/org.jetbrains.kotlinx/kotlinx-coroutines-jdk8/1.6.4) `kotlinx-coroutines-jdk8` can be installed in order simply use `.await()` on `CompletableFuture`s to wait for their completion.
+
+Example Java code:
+```java
+public class Fetcher {
+    public CompletableFuture<Integer> fetchMyLuckyNumber() {
+        // do some work
+        return CompletableFuture.completedFuture(5);
+    }
+}
+```
+
+Example Kotlin code which calls `fetchMyLuckyNumber()`:
+```kotlin
+suspend fun handleLuckyNumber() {
+    val luckyNumber = Fetcher().fetchMyLuckyNumber().await()
+}
+```
+
+#### <a name="project-loom"></a>Does Project Loom Solve Java Concurrency?
 Some may ask whether the upcoming [Project Loom for Java](https://blogs.oracle.com/javamagazine/post/java-loom-virtual-threads-platform-threads) solves concurrency issues in Java.
 While it does offer [virtual threads](https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/lang/Thread.html#startVirtualThread(java.lang.Runnable)) as well as structured concurrency, it forces to write code using Java `Runnable`s which are essentially callbacks:
 ```java
