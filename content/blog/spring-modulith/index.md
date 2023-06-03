@@ -14,6 +14,10 @@ excerpt: Spring Modulith...
 </div>
 
 1. [What is Spring Modulith?](#what-is-spring-modulith)
+2. [Modulith Approach to Application Events](#modulith-approach-to-application-events)
+3. [Integration Testing](#integration-testing)
+    1. [ApplicationModuleTest Annotation](#applicationModuleTest-annotation)
+
 
 
 ### <a name="what-is-spring-modulith"></a>What is Spring Modulith?
@@ -164,7 +168,8 @@ To summarize, the default rules which are checked for when running `verify()` te
 
 It's worth noting that if the default architecture model which comes with Modilith doesn't suit your needs it can be [customized](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/#fundamentals.customizing-modules).
 
-### Modulith Approach to Application Events
+### <a name="modulith-approach-to-application-events"></a>Modulith Approach to Application Events
+### 
 Let's take a look at the following example:
 ```java
 @Service
@@ -204,15 +209,85 @@ class InventoryManagement {
 
   @Async
   @TransactionalEventListener
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   void on(OrderCompleted event) { /* … */ }
 }
 ```
-Using `@TransactionalEventListener` allows to commit the transaction started by `complete()` order method but its `TransactionPhase` is set to `AFTER_COMMIT` by default which according to the [docs](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionSynchronization.html#afterCompletion(int)) means:
-> The transaction will have been committed already, but the transactional resources might still be active and accessible
+Spring transactions don't propagate to other threads therefore `@Async` allows to execute the event listener as not part of the original transaction. In addition, using `@TransactionalEventListener` allows to perform logic [right after](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionSynchronization.html#afterCompletion(int)) the original transaction has successfully been committed. That is right after the `complete()` method transaction is successfully committed the event listener `on()` method is invoked. Lastly, the event listener itself might need to be transactional hence `@Transactional` annotation ([explanation of propagation type](https://github.com/spring-projects/spring-modulith/issues/80)). Since there's quite a lot of annotation boilerplate here, Spring Modulith provides `@ApplicationModuleListener` as a subsitute for the above 3 annotations.
 
-This is why `@Async` is used as well as `@Transactinal` cannot cross over to other threads.
+There're two remaining issues with the setup:
+- if the listener fails the event is lost
+- the application may crash just before the listener is invoked
 
-### Integration Testing
+Modulith provides [event publication registry](https://docs.spring.io/spring-modulith/docs/current/reference/html/#events.publication-registry) which hooks into Spring event publication mechanism and persists an event for every subscribed listener. In case a listener successfully finishes event is persisted with non-null `completion_date`, in case it fails `completion_date` will be null. This allows to implement custom retry mechanisms while by default events whose listeners failed are resubmitted at application startup.
+
+There're currently 3 Modulith event registry starters:
+- `spring-modulith-starter-jpa`
+- `spring-modulith-starter-jdbc`
+- `spring-modulith-starter-mongodb`
+
+Consider the following event:
+```java
+@Transactional
+	public void complete() {
+		events.publishEvent(new OrderCompleted(UUID.randomUUID()));
+	}
+```
+to which there're two subscribers:
+```java
+@Service
+@RequiredArgsConstructor
+class InventoryManagement {
+
+	private static final Logger LOG = LoggerFactory.getLogger(InventoryManagement.class);
+
+	private final ApplicationEventPublisher events;
+
+	@ApplicationModuleListener
+	void on(OrderCompleted event) throws InterruptedException {
+		LOG.info("Received order completion for {}.", event.orderId());
+	}
+}
+```
+and
+```java
+@Service
+@RequiredArgsConstructor
+class UserManagement {
+
+	private static final Logger LOG = LoggerFactory.getLogger(UserManagement.class);
+
+	private final ApplicationEventPublisher events;
+
+	@ApplicationModuleListener
+	void on(OrderCompleted event)  {
+		LOG.info("Received order completion for {}.", event.orderId());
+		throw new RuntimeException("some UserManagement error");
+	}
+}
+```
+In this scenario `UserManagement` subscriber fails while `InventoryManagement` succeeds which will result in the following records in `event_publication` table (if `spring-modulith-starter-jdbc` is used):
+```
+postgres=# select * from event_publication;
+-[ RECORD 1 ]----+-----------------------------------------------------------------------
+id               | 027f117e-2c8f-411a-a2c2-8786a6f35eea
+listener_id      | example.user.UserManagement.on(example.order.OrderCompleted)
+event_type       | example.order.OrderCompleted
+serialized_event | {"orderId":"4850f124-a14c-4f8d-b13f-ff3db3d2fd9f"}
+publication_date | 2023-06-03 11:18:12.173418+00
+completion_date  |
+-[ RECORD 2 ]----+-----------------------------------------------------------------------
+id               | bc5b6526-0e32-4401-80eb-a31e83845797
+listener_id      | example.inventory.InventoryManagement.on(example.order.OrderCompleted)
+event_type       | example.order.OrderCompleted
+serialized_event | {"orderId":"4850f124-a14c-4f8d-b13f-ff3db3d2fd9f"}
+publication_date | 2023-06-03 11:18:12.134889+00
+completion_date  | 2023-06-03 11:18:13.253296+00
+```
+
+### <a name="integration-testing"></a>Integration Testing
+#### <a name="applicationModuleTest-annotation"></a>ApplicationModuleTest Annotation
+
 Spring Modulith allows to set up integration tests via `@ApplicationModuleTest` annotation similar to `@SpringBootTest`. However `@ApplicationModuleTest` exposes more functionality, first and foremost, bootstrap modes:
 - `STANDALONE` (default) — Runs the current module only.
 
@@ -221,3 +296,142 @@ Spring Modulith allows to set up integration tests via `@ApplicationModuleTest` 
 - `ALL_DEPENDENCIES` — Runs the current module and the entire tree of modules depended on.
 
 This is quite handy because we get these bootstrap modes out of the box as opposed to having to manually create [slices](https://spring.io/blog/2016/08/30/custom-test-slice-with-spring-boot-1-4) in Spring Boot tests.
+
+#### Testing Apprlication Events
+If the application is event driven it can require considerable effort and testing infrastructure in order to write integration tests. This is especially true if the events are consumed asynchronously. In order to help developers Modulith provides `Scenario` utility which can be consumed as an argument in a JUnit 5 test:
+```java
+@ApplicationModuleTest
+class SomeIntegrationTest {
+
+  @Test
+  public void someCheck(Scenario scenario) {
+    // test definition here
+  }
+}
+```
+A test can be started either using `scenario.stimulate()` or `scenario.publish()` API. As an example let's consider `OrderManagement` class:
+```java
+@Service
+@RequiredArgsConstructor
+public class OrderManagement {
+
+	private final @NonNull ApplicationEventPublisher events;
+
+	@Transactional
+	public void complete() {
+		events.publishEvent(new OrderCompleted(UUID.randomUUID()));
+	}
+}
+```
+and the following integration test:
+```java
+@ApplicationModuleTest
+@Import(AsyncTransactionalEventListener.class)
+@RequiredArgsConstructor
+class EventPublicationRegistryTests {
+
+	private final OrderManagement orders;
+	private final AsyncTransactionalEventListener listener;
+
+	@Test
+	void inventoryToFulfillOrderIsX(Scenario scenario) throws Exception {
+
+		var order = new Order();
+
+		// Initiate flow by calling stimulate()
+		scenario.stimulate(() -> orders.complete(order))
+				// wait until inventoryToFulfillOrder becomes not-null/non-Optional
+				.andWaitForStateChange(() -> listener.getInventoryToFulfillOrder())
+				.andVerify(inventoryToFulfillOrder -> {
+					assertThat(inventoryToFulfillOrder).contains("X");
+				});
+	}
+
+	static class AsyncTransactionalEventListener {
+
+		private static final Logger LOG = LoggerFactory.getLogger(AsyncTransactionalEventListener.class);
+
+		@Getter
+		private String inventoryToFulfillOrder;
+
+		@ApplicationModuleListener
+		void foo(OrderCompleted event) throws InterruptedException {
+			LOG.info("Received order completion for {}.", event.orderId());
+
+			// simulate work
+			Thread.sleep(1000L);
+			this.inventoryToFulfillOrder = "inventory X";
+
+			LOG.info("Finished order completion for {}.", event.orderId());
+		}
+	}
+}
+```
+In the example above `stimulate()` was used to start order management flow waiting for the state changes of `AsyncTransactionalEventListener`. Once the state has changed (`inventoryToFulfillOrder` was initiated to a non-null/non-`Optional` value) `verify()` is called.
+
+For an example of a `scenario.publish()` test consider `InventoryUpdated`, `InventoryManagement` and `OrderManagement` classes. Below is `InventoryUpdated` implementation:
+```java
+package example.inventory;
+
+import org.jmolecules.event.types.DomainEvent;
+
+public record InventoryUpdated(String inventoryId) implements DomainEvent {}
+```
+`InventoryManagement` implementation:
+```java
+@Service
+@RequiredArgsConstructor
+class InventoryManagement {
+
+	private final ApplicationEventPublisher events;
+
+	@ApplicationModuleListener
+	void on(OrderCompleted event) throws InterruptedException {
+		var orderId = event.orderId();
+
+		// Simulate work
+		Thread.sleep(1000);
+		events.publishEvent(new InventoryUpdated(orderId));
+	}
+}
+```
+and `OrderManagement`:
+```java
+@Service
+@RequiredArgsConstructor
+public class OrderManagement {
+
+  private final ApplicationEventPublisher events;
+
+  @Transactional
+  public void complete(Order order) {
+    events.publishEvent(new OrderCompleted(order.getId()));
+  }
+}
+```
+Finally below is a test which checks that `InventoryUpdated` event is published after `OrderCompleted` is fired:
+```java
+@ApplicationModuleTest(extraIncludes = "inventory")
+@RequiredArgsConstructor
+class OrderManagementTests {
+
+    @Test
+    void inventoryUpdatedEventIsPublished(Scenario scenario) {
+        Order order = new Order();
+
+        scenario.publish(new OrderCompleted(order.getId()))
+                .andWaitForEventOfType(InventoryUpdated.class)
+                .toArrive();
+    }
+}
+```
+[Earlier](#applicationModuleTest-annotation) it was mentioned that when testing a module which invokes logic from other modules (`OrderManagement` expects `InventoryUpdated` event to be triggered by `InventoryManagement` in the test) we need to set the bootstrap mode in `@ApplicationModuleTest` accordingly. However, note that `OrderManagement` service **doesn't** directly depend on `InventoryManagment`, on the contrary it uses application events. In this case setting mode in `@ApplicationModuleTest(mode = ApplicationModuleTest.BootstrapMode.DIRECT_DEPENDENCIES)` won't help to trigger `InventoryUpdated` event. In such cases there're two options:
+1. `extraIncludes` parameter can be used as in `@ApplicationModuleTest(extraIncludes = "inventory")`. This will import services from `inventory` package. Multiple extra modules can be declared: `@ApplicationModuleTest(extraIncludes = {"inventory", "user"})`.
+2. Adding `@SpringBootTest` and `@EnableScenarios` to a test class.
+
+------
+
+PRs
+- all incomplete event publications are resubmitte
+- remove @Import in tests
+- make module application test instead of springboottest
