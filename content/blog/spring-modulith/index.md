@@ -413,7 +413,7 @@ Finally below is a test which checks that `InventoryUpdated` event is published 
 ```java
 @ApplicationModuleTest(extraIncludes = "inventory")
 @RequiredArgsConstructor
-class OrderManagementTests {
+class ApplicationTests {
 
     @Test
     void inventoryUpdatedEventIsPublished(Scenario scenario) {
