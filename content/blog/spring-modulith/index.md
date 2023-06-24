@@ -610,16 +610,3 @@ Spring Modulith will trace each Spring bean method invocation and mark each trac
 In [Zipkin](https://zipkin.io/) UI the traces will look as follows:
 
 ![trace](./trace.png)
-
-
-------
-
-PRs
-- all incomplete event publications are resubmitte
-- remove @Import in tests
-- make module application test instead of springboottest
-- Generating application module component diagrams using Documenter -> module canvases
-- public void initialize must be public in ApplicationModuleInitializer
-- execution order via Spring’s standard @Order annotation or - no dependson should be used here
-- spring-modulith-starter-insight doesn't follow bom version: it has version 0.6.0 https://mvnrepository.com/artifact/org.springframework.experimental/spring-modulith-starter-insight while bom is 1-snapshot
-- org.springframework.modulith:spring-modulith-observability not exists should be org.springframework.experimental:spring-modulith-observability
