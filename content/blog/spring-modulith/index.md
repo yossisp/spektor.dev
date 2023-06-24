@@ -18,8 +18,13 @@ excerpt: Spring Modulith...
 3. [Integration Testing](#integration-testing)
     1. [ApplicationModuleTest Annotation](#applicationModuleTest-annotation)
     2. [Testing Application Events](#applicationModuleTest-testing-application-events)
-    3. [Passage of Time Events](#passage-of-time-events)
-
+4. [Passage of Time Events](#passage-of-time-events)
+5. [Self-Documentated Modules](#self-documented-modules)
+6. [Module Initialization Logic On Startup](#module-initialization-logic-on-startup)
+7. [Production-ready Features](#production-ready-features)
+      1. [Actuator](#actuator)
+      2. [Observability](#observability)
+      
 
 ### <a name="what-is-spring-modulith"></a>What is Spring Modulith?
 [Spring Modulith](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/) is Spring Boot project which focuses on architectural [best-practices](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/#fundamentals):
@@ -434,7 +439,14 @@ class ApplicationTests {
 ### <a name="passage-of-time-events"></a>Passage of Time Events
 Passage of time events are another interesting feature provided by Spring Modulith. It was inspired by Matthias Verraes [blog post](https://verraes.net/2019/05/patterns-for-decoupling-distsys-passage-of-time-event/).
 
-Imagine having multiple but unrelated pieces of logic which need to be executed each day for example. Instead of creating a CRON job which will run every day for every such piece of logic, the passage of time approach recommends to publish an event: `DayHasPassed` then have all relevant services subscribe to that event. Spring Modulith provides an implementation of passage of time logic by exposing `HourHasPassed`, `DayHasPassed`, `WeekHasPassed`, `MonthHasPassed`, `QuarterHasPassed` and `YearHasPassed` events. In addition, if `spring.modulith.moments.enable-time-machine` property is set to `true` then `TimeMachine` bean with `shiftBy` will be exposed. `shiftBy` allows to forward time which can be a handy utility in integration tests to trigger passage of time-based logic. For instance, suppose we have the following listener:
+Imagine having multiple but unrelated pieces of logic which need to be executed each day for example. Instead of creating a CRON job which will run every day for every such piece of logic, the passage of time approach recommends to publish an event: `DayHasPassed` then have all relevant services subscribe to that event. Spring Modulith [provides](https://docs.spring.io/spring-modulith/docs/current/reference/html/#moments) an implementation of passage of time logic by exposing `HourHasPassed`, `DayHasPassed`, `WeekHasPassed`, `MonthHasPassed`, `QuarterHasPassed` and `YearHasPassed` events, just include the following dependency:
+```xml
+<dependency>
+  <groupId>org.springframework.modulith</groupId>
+  <artifactId>spring-modulith-moments</artifactId>
+</dependency>
+```
+In addition, if `spring.modulith.moments.enable-time-machine` property is set to `true` then `TimeMachine` bean with `shiftBy` will be exposed. `shiftBy` allows to forward time which can be a handy utility in integration tests to trigger passage of time-based logic. For instance, suppose we have the following listener:
 ```java
 	@ApplicationModuleListener
 	void on(HourHasPassed event) {
@@ -451,7 +463,153 @@ We wouldn't want to wait for a whole hour in the integration which would test th
 				.toArrive();
 	}
 ```
+### <a name="self-documented-modules"></a>Self-Documentated Modules
+What I've always wanted in a project is self-documentation. For example, there's an amazing project [XState](https://xstate.js.org/docs/) available to [Node.js](https://nodejs.org/en) developers which allows to write state machine logic and automatically generates interactive (!) [visualizations](https://xstate.js.org/docs/#visualizer) of the logic.
 
+Spring Modulith automatically generates PlantUML diagram of your application as well as module canvases (module metadata). The below snippet generates both [PlantUML](https://github.com/plantuml/plantuml) diagrams and canvases:
+```java
+public class DocumentationTests {
+
+    ApplicationModules modules = ApplicationModules.of(Application.class);
+
+    @Test
+    void writeDocumentationSnippets() {
+        new Documenter(modules)
+                .writeModulesAsPlantUml()
+                .writeIndividualModulesAsPlantUml()
+                .writeModuleCanvases();
+        // Or simply: new Documenter(modules).writeDocumentation();
+    }
+}
+```
+By default, the documentation will be generated to `target/spring-modulith-docs` in a [Maven](https://maven.apache.org/) project or `build/spring-modulith-docs` in a [Gradle](https://gradle.org/) project. This is how the folder output looks like in my test project which has 3 modules:
+```
+target/spring-modulith-docs
+|-- components.puml
+|-- module-inventory.adoc
+|-- module-inventory.puml
+|-- module-order.adoc
+|-- module-order.puml
+|-- module-warehouse.adoc
+`-- module-warehouse.puml
+```
+`components.puml` contains all application modules while each module has additional two files: `.puml` which is represents its own diagram of interactions specific just to the module and `.adoc` file which contains metadata about the module. Below is a sample `components.puml` file:
+![components.puml](./components.puml.png)
+
+A sample `order` module canvas might look as follows:
+
+![order.adoc](./order.adoc.png)
+
+### <a name="module-initialization-logic-on-startup"></a>Module Initialization Logic On Startup
+Sometimes there's certain logic that needs to be executed once per module on application startup. Importantly, this logic may need to be executed in certain order: if module `B` depends on module `A` the initialization logic should first be executed in module `A` then in module `B`. In a regular Spring application the order of beans initialization is controlled by Spring beans dependencies graph. However, in an event-based application the order of dependencies is also determined by `listens to` relationship. Therefore, Spring Modulith [provides](https://docs.spring.io/spring-modulith/docs/current/reference/html/#runtime.application-module-initializer) `ApplicationModuleInitializer` interface. First, the following dependency must be added:
+```xml
+<dependency>
+  <groupId>org.springframework.modulith</groupId>
+  <artifactId>spring-modulith-runtime</artifactId>
+  <scope>runtime</scope>
+</dependency>
+```
+next, the initializer class can implement the interface as follows:
+```java
+@Component
+public class InventoryInitializer implements ApplicationModuleInitializer {
+
+    @Override
+    public void initialize() {
+        // ...
+    }
+}
+```
+Spring Modulith [guarantees](https://docs.spring.io/spring-modulith/docs/current/reference/html/#runtime.application-module-initializer) that such initializers will be called in the same order as in application module dependency structure.
+
+While to some this feature will remind Golang `init()` [function](https://go.dev/doc/effective_go#init) which is called before any other logic in its package, it's important to point out that Spring Modulith does not guarantee to run the initializer before the constructor of other Spring beans in a given module. It's only guaranteed that a module's initializer will be run after the initializers of its modules dependencies.
+
+### <a name="production-ready-features"></a>Production-ready Features
+#### <a name="actuator"></a>Actuator
+Spring Modulith extends [Spring Boot actuator](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.enabling) with an additional [endpoint](https://docs.spring.io/spring-modulith/docs/current/reference/html/#production-ready.actuator) `/application-modules`. The endpoint provides modules metadata information including the list of modules and their dependencies. Below is an example output of the endpoint `http://localhost:8080/actuator/application-modules`:
+```json
+{
+  "order": {
+    "displayName": "Order",
+    "basePackage": "example.order",
+    "dependencies": []
+  },
+  "inventory": {
+    "displayName": "Inventory",
+    "basePackage": "example.inventory",
+    "dependencies": [
+      {
+        "types": [
+          "EVENT_LISTENER"
+        ],
+        "target": "order"
+      }
+    ]
+  }
+}
+```
+In order to enable the actuator add these dependencies:
+```xml
+		<dependency>
+			<groupId>org.springframework.experimental</groupId>
+			<artifactId>spring-modulith-actuator</artifactId>
+			<version>{projectVersion}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<!-- Spring Boot actuator starter required to enable actuators in general -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+      <version>{projectVersion}</version>
+			<scope>runtime</scope>
+		</dependency>
+```
+#### <a name="observability"></a>Observability
+Adding the following dependency:
+```xml
+		<dependency>
+			<groupId>org.springframework.experimental</groupId>
+			<artifactId>spring-modulith-observability</artifactId>
+			<version>{projectVersion}</version>
+		</dependency>
+```
+will enable observability capabilities. Note that additional dependencies will need to be included based on Spring Boot [recommendation](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.micrometer-tracing). In my testing I chose to include:
+```xml
+		<dependency>
+			<groupId>io.micrometer</groupId>
+			<artifactId>micrometer-tracing-bridge-brave</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
+    <!--		for latency reporting-->
+		<dependency>
+			<groupId>io.zipkin.reporter2</groupId>
+			<artifactId>zipkin-reporter-brave</artifactId>
+			<version>2.16.4</version>
+		</dependency>
+```
+Spring Modulith will trace each Spring bean method invocation and mark each trace with the name of the application module. A sample trace JSON will look like this:
+```json
+  {
+    "traceId": "6496cef3b37032a5d32c85ca582d855b",
+    "id": "d32c85ca582d855b",
+    "name": "warehouse",
+    "timestamp": 1687604979559445,
+    "duration": 236,
+    "localEndpoint": {
+      "serviceName": "application",
+      "ipv4": "10.100.102.4"
+    },
+    "tags": {
+      "module.method": "e.w.WarehouseManagement.on(…)",
+      "org.springframework.modulith.module": "warehouse"
+    }
+  }
+```
+In [Zipkin](https://zipkin.io/) UI the traces will look as follows:
+
+![trace](./trace.png)
 
 
 ------
@@ -460,4 +618,8 @@ PRs
 - all incomplete event publications are resubmitte
 - remove @Import in tests
 - make module application test instead of springboottest
-
+- Generating application module component diagrams using Documenter -> module canvases
+- public void initialize must be public in ApplicationModuleInitializer
+- execution order via Spring’s standard @Order annotation or - no dependson should be used here
+- spring-modulith-starter-insight doesn't follow bom version: it has version 0.6.0 https://mvnrepository.com/artifact/org.springframework.experimental/spring-modulith-starter-insight while bom is 1-snapshot
+- org.springframework.modulith:spring-modulith-observability not exists should be org.springframework.experimental:spring-modulith-observability
