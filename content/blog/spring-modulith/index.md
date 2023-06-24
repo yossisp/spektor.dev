@@ -17,7 +17,8 @@ excerpt: Spring Modulith...
 2. [Modulith Approach to Application Events](#modulith-approach-to-application-events)
 3. [Integration Testing](#integration-testing)
     1. [ApplicationModuleTest Annotation](#applicationModuleTest-annotation)
-
+    2. [Testing Application Events](#applicationModuleTest-testing-application-events)
+    3. [Passage of Time Events](#passage-of-time-events)
 
 
 ### <a name="what-is-spring-modulith"></a>What is Spring Modulith?
@@ -297,7 +298,7 @@ Spring Modulith allows to set up integration tests via `@ApplicationModuleTest` 
 
 This is quite handy because we get these bootstrap modes out of the box as opposed to having to manually create [slices](https://spring.io/blog/2016/08/30/custom-test-slice-with-spring-boot-1-4) in Spring Boot tests.
 
-#### Testing Apprlication Events
+#### <a name="applicationModuleTest-testing-application-events"></a>Testing Application Events
 If the application is event driven it can require considerable effort and testing infrastructure in order to write integration tests. This is especially true if the events are consumed asynchronously. In order to help developers Modulith provides `Scenario` utility which can be consumed as an argument in a JUnit 5 test:
 ```java
 @ApplicationModuleTest
@@ -429,9 +430,34 @@ class ApplicationTests {
 1. `extraIncludes` parameter can be used as in `@ApplicationModuleTest(extraIncludes = "inventory")`. This will import services from `inventory` package. Multiple extra modules can be declared: `@ApplicationModuleTest(extraIncludes = {"inventory", "user"})`.
 2. Adding `@SpringBootTest` and `@EnableScenarios` to a test class.
 
+
+### <a name="passage-of-time-events"></a>Passage of Time Events
+Passage of time events are another interesting feature provided by Spring Modulith. It was inspired by Matthias Verraes [blog post](https://verraes.net/2019/05/patterns-for-decoupling-distsys-passage-of-time-event/).
+
+Imagine having multiple but unrelated pieces of logic which need to be executed each day for example. Instead of creating a CRON job which will run every day for every such piece of logic, the passage of time approach recommends to publish an event: `DayHasPassed` then have all relevant services subscribe to that event. Spring Modulith provides an implementation of passage of time logic by exposing `HourHasPassed`, `DayHasPassed`, `WeekHasPassed`, `MonthHasPassed`, `QuarterHasPassed` and `YearHasPassed` events. In addition, if `spring.modulith.moments.enable-time-machine` property is set to `true` then `TimeMachine` bean with `shiftBy` will be exposed. `shiftBy` allows to forward time which can be a handy utility in integration tests to trigger passage of time-based logic. For instance, suppose we have the following listener:
+```java
+	@ApplicationModuleListener
+	void on(HourHasPassed event) {
+		// ...
+		events.publishEvent(new OrderCompleted("some_order_id"));
+	}
+```
+We wouldn't want to wait for a whole hour in the integration which would test the above logic, therefore `TimeMachine` can be shifted one hour forward:
+```java
+	@Test
+	void orderCompletedEventIsSent(Scenario scenario) {
+		scenario.stimulate(() -> timeMachine.shiftBy(Duration.ofHours(1)))
+				.andWaitForEventOfType(OrderCompleted.class)
+				.toArrive();
+	}
+```
+
+
+
 ------
 
 PRs
 - all incomplete event publications are resubmitte
 - remove @Import in tests
 - make module application test instead of springboottest
+
