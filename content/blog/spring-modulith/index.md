@@ -1,14 +1,14 @@
 ---
 title: "Spring Modulith"
-date: 2023-05-20T19:19:03.284Z
-description: "Spring Modulith."
+date: 2023-06-30T11:19:03.284Z
+description: "Spring Modulith is a Spring Boot project which focuses on architectural best-practices."
 tags: "java, spring, DDD"
-excerpt: Spring Modulith...
+excerpt: Spring Modulith is a Spring Boot project which focuses on architectural best-practices...
 ---
 
 <div style="display:flex;justify-content:center;padding-right:10%;padding-bottom:50px;padding-top:30px;">
-    <img style="min-width:100px;max-width:200px" src="./dapr_logo.svg"
-            alt="DAPR Logo"
+    <img style="min-width:60%;max-width:70%;" src="./Spring_Framework_Logo_2018.svg"
+            alt="Spring Framework Logo"
             style="margin:0;"
             />
 </div>
@@ -27,41 +27,21 @@ excerpt: Spring Modulith...
       
 
 ### <a name="what-is-spring-modulith"></a>What is Spring Modulith?
-[Spring Modulith](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/) is Spring Boot project which focuses on architectural [best-practices](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/#fundamentals):
+[Spring Modulith](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/) is a Spring Boot project which focuses on architectural [best-practices](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/#fundamentals):
 
 >Spring Modulith supports developers implementing logical modules in Spring Boot applications.
 
-The project aims to provide structure based on [domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design) principles, it encourages to create Java packages by domain: instead of grouping all controllers under `controllers` folder or all models under `model` folder we're encouraged to have a Java package for orders or users which will contain all the serices/controllers/models related to those domains. 
+The project aims to provide structure based on [domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design) principles. It encourages to create Java packages by domain: instead of grouping all controllers under `controllers` folder or all models under `model` folder we're encouraged to have a Java package for orders or users which will contain all the services/controllers/models related to those domains. It's worth noting that Spring Modulith is still in **experimental stage** and depends on Spring Boot 3 which as result means that it requires **JDK 17**.
 
-It is beside the scope of the post to argue in favor of the above structure however a good parallel would be organizing household items in your home: you probably wouldn't have an area of your house dedicated specifically to electrical appliances but rather you would have a mixer in the kitchen, a TV in the living room annd so on.
-
-Below are the main architectural principles of Spring Modulith:
+It is beside the scope of the post to argue in favor of the domain-driven structure however a good parallel would be organizing household items in your home: you probably wouldn't have an area of your house dedicated solely to electrical appliances but rather you would have a mixer in the kitchen, a TV in the living room and so on. Below are the main architectural principles of Spring Modulith:
 
 - The project regards an application module as a unit of functionality in a Spring Boot application: it consists of externally exposed interfaces and internal logic.
 - By default, each direct sub-package of the main package is considered an application module package. 
 - Any sub-package of an application module package is considered to be internal.
-- Code from other application modules is allowed to refer to types ther application modules.
-- Code within internal pacakges must not be referred to from other modules.
+- Code of application modules is allowed to refer to types of other application modules.
+- Other application modules must not refer to the code within internal packages.
 
-Looking at the project structure below there're two application module packages: `inventory` and `order`.
-```
-.
-|-- README.md
-|-- pom.xml
-`-- src
-    |-- main
-    |   |-- java
-    |   |   `-- example
-    |   |       |-- Application.java
-    |   |       |-- inventory
-    |   |       |   |-- InventoryManagement.java
-    |   |       `-- order
-    |   |           |-- Order.java
-```
-
-It's quite easy to hide the code from one package to another: classes with package-private access modifier are not accessible from other packages.
-
-Let's take a look at another example of project structure:
+Let's demonstrate the last point by looking at the project <a name="basic-structure"></a>structure below:
 ```
 .
 |-- README.md
@@ -79,7 +59,7 @@ Let's take a look at another example of project structure:
     |   |           |   `-- OrderInternal.java
 
 ```
-In this scenario `Order` uses `OrderInternal` logic, this `OrderInternal` cannot be package-private and must be public which unfortunately makes it accessible to other application modules. This is where Modulith comes in: in case some code in `inventory` package refers to `OrderInternal` it will automatically recognize this architecture violation. In practice this is achieved by adding an integration test:
+`Order` uses `OrderInternal` logic, thus `OrderInternal` cannot be package-private and must be made public which unfortunately makes it accessible to other Java packages. This is where Modulith comes in: if some code in `inventory` package refers to `OrderInternal` it will automatically recognize this as architecture violation. In practice this is achieved by adding an integration test:
 ```java
 class ModularityTests {
 
@@ -100,82 +80,41 @@ within module 'order'!
 ```
 Behind the scenes Modulith uses [ArchUnit](https://www.archunit.org/) project to enforce various architectural rules.
 
-In addition, we can explicitly declare which module dependencies using `package-info.java` file:
+By default, any non-internal application module is allowed to use other non-internal application modules. We can restrict even further the module dependencies of another module by using `ApplicationModule` annotation in `package-info.java` file:
 ```java
 @org.springframework.modulith.ApplicationModule(
   allowedDependencies = "order"
 )
 package example.inventory;
 ```
+The above annotation means that the only module dependency of `inventory` module is `order`.
 
-Consider the following example where `inventory` package would declare dependency only on `order` package but later someone would use `User` class from `user` package which is not a declared dependency.
-```
-.
-|-- README.md
-|-- pom.xml
-|-- src
-|   |-- main
-|   |   |-- java
-|   |   |   `-- example
-|   |   |       |-- Application.java
-|   |   |       |-- inventory
-|   |   |       |   |-- InventoryManagement.java
-|   |   |       |-- order
-|   |   |       |   |-- Order.java
-|   |   |       `-- user
-|   |   |           `-- User.java
-```
-Modularity test would fail with the following message:
-```
- ModularityTests.verifiesModularStructure:33 ? 
- Violations - Module 'inventory' depends on module 'user' via 
- example.inventory.InventoryManagement -> example.user.User.
- Allowed targets: order
- ```
-
- While it's great to stick to these conventions in real life project architecture may be more complicated and you may need to expose logic from an internal package to another application module. This can be achieved using by creating a `package-info.java` file inside that internal package and adding `@org.springframework.modulith.NamedInterface("some-internal-package")`. If we wanted to expose `order.internal` package in the following project:
- ```
-.
-|-- README.md
-|-- pom.xml
-`-- src
-    |-- main
-    |   |-- java
-    |   |   `-- example
-    |   |       |-- Application.java
-    |   |       |-- inventory
-    |   |       |   |-- InventoryManagement.java
-    |   |       `-- order
-    |   |           |-- Order.java
-    |   |           |-- internal
-    |   |           |   `-- OrderInternal.java
-
-```
-We would create the following `package-info.java` file in `order.internal` package:
+While it's great to stick to these conventions, in real life the architecture of a project may be more complex and you may need to expose logic from an internal package to another application module. This can be achieved by creating a `package-info.java` file inside that internal package and adding `@org.springframework.modulith.NamedInterface("some-internal-package")`. If we wanted to expose `order.internal` package in the following [project](#basic-structure) we would create the following `package-info.java` file in `order.internal` package:
 ```java
 @org.springframework.modulith.NamedInterface("order-internal")
 package example.order.internal;
 ```
-This would immediately allow to use `OrderInternal` class in `inventory` package. As an additional option we could specify that `inventory` package depends solely on `order.inventory` package as follows:
+This would immediately allow to use `OrderInternal` class in `inventory` package. However, in case `inventory` module already had declared explicit dependencies then the internal package would have to be added to those dependencies as follows:
 ```java
 @org.springframework.modulith.ApplicationModule(
-        allowedDependencies = "order::order-internal"
+        allowedDependencies = {"order", "order::order-internal"}
 )
 package example.inventory;
 ```
 
-To summarize, the default rules which are checked for when running `verify()` test are:
+To summarize, the default rules which are checked for when running `verify()` on `ApplicationModules` are:
 
 - No cycles on the application module level.
 
+- Reference to other non-internal application modules are allowed.
+
 - All references to types that reside in application module internal packages are rejected.
 
-- If explicit dependencies are configured, dependencies to other application modules are rejected.
+- If explicit dependencies are configured, dependencies to other non-declared application modules are rejected.
 
-It's worth noting that if the default architecture model which comes with Modilith doesn't suit your needs it can be [customized](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/#fundamentals.customizing-modules).
+It's worth noting that if the default architecture model which comes with Modulith doesn't suit your needs it can be [customized](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/#fundamentals.customizing-modules).
 
 ### <a name="modulith-approach-to-application-events"></a>Modulith Approach to Application Events
-### 
 Let's take a look at the following example:
 ```java
 @Service
@@ -192,7 +131,7 @@ public class OrderManagement {
 ```
 >The `complete(…)` method creates functional gravity in the sense that it attracts related functionality and thus interaction with Spring beans defined in other application modules. 
 
-This means that in order to test `OrderManagement` its dependencies must be available as well either as real instances or mocked. Spring events can be used to decouple the functionality:
+This means that in order to test `OrderManagement` its dependencies must be available either as real instances or mocked. Spring events can be used to decouple these dependencies:
 ```java
 @Service
 @RequiredArgsConstructor
@@ -206,7 +145,7 @@ public class OrderManagement {
   }
 }
 ```
-Now `ApplicationEventPublisher` Spring class is used to publish `OrderCompleted` event which can then be consume by `InventoryManagement`. By default, Spring events are published [synchronously](https://www.baeldung.com/spring-events#anonymous-events), that is after the event is published it will be consumed in the same thread by a listener. On the one hand this offers a simpler mental model to reason about events, on the other hand the event consumer participates in the original transaction which widens  transaction boundary and increases the chances for the transaction to fail.
+Above `ApplicationEventPublisher` Spring class is used to publish `OrderCompleted` event which can then be consumed by `InventoryManagement`. By default, Spring events are published [synchronously](https://www.baeldung.com/spring-events#anonymous-events), that is after the event is published it will be consumed in the same thread by a listener. On the one hand this offers a simpler mental model to reason about events, on the other hand the event consumer participates in the original transaction which widens  transaction boundary and increases the chances for the transaction to fail.
 
 The above issue can be mitigated by implementing an asynchronous consumer of application events:
 ```java
@@ -219,13 +158,13 @@ class InventoryManagement {
   void on(OrderCompleted event) { /* … */ }
 }
 ```
-Spring transactions don't propagate to other threads therefore `@Async` allows to execute the event listener as not part of the original transaction. In addition, using `@TransactionalEventListener` allows to perform logic [right after](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionSynchronization.html#afterCompletion(int)) the original transaction has successfully been committed. That is right after the `complete()` method transaction is successfully committed the event listener `on()` method is invoked. Lastly, the event listener itself might need to be transactional hence `@Transactional` annotation ([explanation of propagation type](https://github.com/spring-projects/spring-modulith/issues/80)). Since there's quite a lot of annotation boilerplate here, Spring Modulith provides `@ApplicationModuleListener` as a subsitute for the above 3 annotations.
+Spring transactions don't propagate to other threads therefore `@Async` allows to execute the event listener as not part of the original transaction. In addition, using `@TransactionalEventListener` allows to perform logic [right after](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionSynchronization.html#afterCompletion(int)) the original transaction has successfully been committed. That is right after the `complete()` method transaction is successfully committed the event listener `on()` method is invoked. Lastly, the event listener itself might need to be transactional hence the `@Transactional` annotation ([explanation of propagation type](https://github.com/spring-projects/spring-modulith/issues/80)). Since there's quite a lot of annotation boilerplate here, Spring Modulith provides `@ApplicationModuleListener` as a subsitute for the above 3 annotations.
 
-There're two remaining issues with the setup:
-- if the listener fails the event is lost
-- the application may crash just before the listener is invoked
+Still, there're two more issues with the setup:
+- If the listener fails the event is lost.
+- The application may crash just before the listener is invoked, so even `try/catch` mechanism inside a listener will not help.
 
-Modulith provides [event publication registry](https://docs.spring.io/spring-modulith/docs/current/reference/html/#events.publication-registry) which hooks into Spring event publication mechanism and persists an event for every subscribed listener. In case a listener successfully finishes event is persisted with non-null `completion_date`, in case it fails `completion_date` will be null. This allows to implement custom retry mechanisms while by default events whose listeners failed are resubmitted at application startup.
+To tackle the above issues Spring Modulith provides [event publication registry](https://docs.spring.io/spring-modulith/docs/current/reference/html/#events.publication-registry) which hooks into Spring event publication mechanism and persists an event for every subscribed listener. In case a listener successfully finishes, the event is persisted with non-null `completion_date`, in case it fails `completion_date` will be null. This allows to implement custom retry mechanisms while by default events whose listeners failed are resubmitted at application startup.
 
 There're currently 3 Modulith event registry starters:
 - `spring-modulith-starter-jpa`
@@ -239,7 +178,7 @@ Consider the following event:
 		events.publishEvent(new OrderCompleted(UUID.randomUUID()));
 	}
 ```
-to which there're two subscribers:
+with two subscribers:
 ```java
 @Service
 @RequiredArgsConstructor
@@ -250,8 +189,9 @@ class InventoryManagement {
 	private final ApplicationEventPublisher events;
 
 	@ApplicationModuleListener
-	void on(OrderCompleted event) throws InterruptedException {
+	void on(OrderCompleted event) {
 		LOG.info("Received order completion for {}.", event.orderId());
+    // ...
 	}
 }
 ```
@@ -297,9 +237,9 @@ completion_date  | 2023-06-03 11:18:13.253296+00
 Spring Modulith allows to set up integration tests via `@ApplicationModuleTest` annotation similar to `@SpringBootTest`. However `@ApplicationModuleTest` exposes more functionality, first and foremost, bootstrap modes:
 - `STANDALONE` (default) — Runs the current module only.
 
-- `DIRECT_DEPENDENCIES` — Runs the current module as well as all modules the current one directly depends on.
+- `DIRECT_DEPENDENCIES` — Runs the current module as well as imports all modules the current one directly depends on.
 
-- `ALL_DEPENDENCIES` — Runs the current module and the entire tree of modules depended on.
+- `ALL_DEPENDENCIES` — Runs the current module and imports the entire tree of modules depended on.
 
 This is quite handy because we get these bootstrap modes out of the box as opposed to having to manually create [slices](https://spring.io/blog/2016/08/30/custom-test-slice-with-spring-boot-1-4) in Spring Boot tests.
 
@@ -361,11 +301,10 @@ class EventPublicationRegistryTests {
 		private String inventoryToFulfillOrder;
 
 		@ApplicationModuleListener
-		void foo(OrderCompleted event) throws InterruptedException {
+		void foo(OrderCompleted event) {
 			LOG.info("Received order completion for {}.", event.orderId());
 
-			// simulate work
-			Thread.sleep(1000L);
+		  // ...
 			this.inventoryToFulfillOrder = "inventory X";
 
 			LOG.info("Finished order completion for {}.", event.orderId());
@@ -383,25 +322,7 @@ import org.jmolecules.event.types.DomainEvent;
 
 public record InventoryUpdated(String inventoryId) implements DomainEvent {}
 ```
-`InventoryManagement` implementation:
-```java
-@Service
-@RequiredArgsConstructor
-class InventoryManagement {
-
-	private final ApplicationEventPublisher events;
-
-	@ApplicationModuleListener
-	void on(OrderCompleted event) throws InterruptedException {
-		var orderId = event.orderId();
-
-		// Simulate work
-		Thread.sleep(1000);
-		events.publishEvent(new InventoryUpdated(orderId));
-	}
-}
-```
-and `OrderManagement`:
+`OrderManagement` implementation:
 ```java
 @Service
 @RequiredArgsConstructor
@@ -413,6 +334,23 @@ public class OrderManagement {
   public void complete(Order order) {
     events.publishEvent(new OrderCompleted(order.getId()));
   }
+}
+```
+
+and `InventoryManagement`:
+```java
+@Service
+@RequiredArgsConstructor
+class InventoryManagement {
+
+	private final ApplicationEventPublisher events;
+
+	@ApplicationModuleListener
+	void on(OrderCompleted event) {
+
+		// ...
+		events.publishEvent(new InventoryUpdated(event.orderId()));
+	}
 }
 ```
 Finally below is a test which checks that `InventoryUpdated` event is published after `OrderCompleted` is fired:
@@ -431,10 +369,9 @@ class ApplicationTests {
     }
 }
 ```
-[Earlier](#applicationModuleTest-annotation) it was mentioned that when testing a module which invokes logic from other modules (`OrderManagement` expects `InventoryUpdated` event to be triggered by `InventoryManagement` in the test) we need to set the bootstrap mode in `@ApplicationModuleTest` accordingly. However, note that `OrderManagement` service **doesn't** directly depend on `InventoryManagment`, on the contrary it uses application events. In this case setting mode in `@ApplicationModuleTest(mode = ApplicationModuleTest.BootstrapMode.DIRECT_DEPENDENCIES)` won't help to trigger `InventoryUpdated` event. In such cases there're two options:
+[Earlier](#applicationModuleTest-annotation) it was mentioned that when testing a module which invokes logic from other modules (`OrderManagement` expects `InventoryUpdated` event to be triggered by `InventoryManagement` in the test) we need to set the bootstrap mode in `@ApplicationModuleTest` accordingly. However, note that `OrderManagement` service **doesn't** directly depend on `InventoryManagement`, on the contrary it uses application events. In this case setting mode in `@ApplicationModuleTest(mode = ApplicationModuleTest.BootstrapMode.DIRECT_DEPENDENCIES)` won't help to trigger `InventoryUpdated` event. There're two options to address this:
 1. `extraIncludes` parameter can be used as in `@ApplicationModuleTest(extraIncludes = "inventory")`. This will import services from `inventory` package. Multiple extra modules can be declared: `@ApplicationModuleTest(extraIncludes = {"inventory", "user"})`.
-2. Adding `@SpringBootTest` and `@EnableScenarios` to a test class.
-
+2. Adding `@SpringBootTest` and `@EnableScenarios` annotations to a test class.
 
 ### <a name="passage-of-time-events"></a>Passage of Time Events
 Passage of time events are another interesting feature provided by Spring Modulith. It was inspired by Matthias Verraes [blog post](https://verraes.net/2019/05/patterns-for-decoupling-distsys-passage-of-time-event/).
@@ -446,7 +383,7 @@ Imagine having multiple but unrelated pieces of logic which need to be executed 
   <artifactId>spring-modulith-moments</artifactId>
 </dependency>
 ```
-In addition, if `spring.modulith.moments.enable-time-machine` property is set to `true` then `TimeMachine` bean with `shiftBy` will be exposed. `shiftBy` allows to forward time which can be a handy utility in integration tests to trigger passage of time-based logic. For instance, suppose we have the following listener:
+In addition, if `spring.modulith.moments.enable-time-machine` property is set to `true` then `TimeMachine` bean with `shiftBy` method will be exposed. `shiftBy` allows to forward time which can be a handy utility in integration tests to trigger passage of time-based logic. For instance, suppose we have the following listener:
 ```java
 	@ApplicationModuleListener
 	void on(HourHasPassed event) {
@@ -574,7 +511,7 @@ Adding the following dependency:
 			<version>{projectVersion}</version>
 		</dependency>
 ```
-will enable observability capabilities. Note that additional dependencies will need to be included based on Spring Boot [recommendation](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.micrometer-tracing). In my testing I chose to include:
+will enable observability capabilities. Note that additional dependencies will need to be included based on Spring Boot [recommendation](https://docs.spring.io/spring-boot/docs/current/reference/html/actuator.html#actuator.micrometer-tracing). When playing with the feature I chose to include:
 ```xml
 		<dependency>
 			<groupId>io.micrometer</groupId>
