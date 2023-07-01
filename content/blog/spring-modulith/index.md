@@ -1,6 +1,6 @@
 ---
-title: "Spring Modulith"
-date: 2023-06-30T11:19:03.284Z
+title: "Introducing Spring Modulith"
+date: 2023-07-01T21:19:03.284Z
 description: "Spring Modulith is a Spring Boot project which focuses on architectural best-practices."
 tags: "java, spring, DDD"
 excerpt: Spring Modulith is a Spring Boot project which focuses on architectural best-practices...
@@ -37,7 +37,7 @@ The project aims to provide structure based on [domain-driven design](https://en
 It is beside the scope of the post to argue in favor of the domain-driven structure however a good parallel would be organizing household items in your home: you probably wouldn't have an area of your house dedicated solely to electrical appliances but rather you would have a mixer in the kitchen, a TV in the living room and so on. Below are the main architectural principles of Spring Modulith:
 
 - The project regards an application module as a unit of functionality in a Spring Boot application: it consists of externally exposed interfaces and internal logic.
-- By default, each direct sub-package of the main package is considered an application module package. 
+- By default, each direct sub-package of the root package is considered an application module package. 
 - Any sub-package of an application module package is considered to be internal.
 - Code of application modules is allowed to refer to types of other application modules.
 - Other application modules must not refer to the code within internal packages.
@@ -79,7 +79,7 @@ Violations - Module 'inventory' depends on non-exposed
 type example.order.internal.OrderInternal
 within module 'order'!
 ```
-Behind the scenes Modulith uses [ArchUnit](https://www.archunit.org/) project to enforce various architectural rules.
+Behind the scenes Modulith uses [ArchUnit](https://www.archunit.org/) project to enforce various architectural rules (you can read more on how ArchUnit works in my other [post](https://www.spektor.dev/project-architecture-testing-in-java-applications/))
 
 By default, any non-internal application module is allowed to use other non-internal application modules. We can restrict even further the module dependencies of another module by using `ApplicationModule` annotation in `package-info.java` file:
 ```java
