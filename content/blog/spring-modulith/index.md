@@ -24,7 +24,8 @@ excerpt: Spring Modulith is a Spring Boot project which focuses on architectural
 7. [Production-ready Features](#production-ready-features)
       1. [Actuator](#actuator)
       2. [Observability](#observability)
-      
+8. [Spring Modulith vs Java 9 Modules](#spring-modulith-vs-java-9-modules)
+8. [Summary](#summary)
 
 ### <a name="what-is-spring-modulith"></a>What is Spring Modulith?
 [Spring Modulith](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/) is a Spring Boot project which focuses on architectural [best-practices](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/#fundamentals):
@@ -94,7 +95,7 @@ While it's great to stick to these conventions, in real life the architecture of
 @org.springframework.modulith.NamedInterface("order-internal")
 package example.order.internal;
 ```
-This would immediately allow to use `OrderInternal` class in `inventory` package. However, in case `inventory` module already had declared explicit dependencies then the internal package would have to be added to those dependencies as follows:
+<a name="explicitly-import-module"></a>This would immediately allow to use `OrderInternal` class in `inventory` package. However, in case `inventory` module already had declared explicit dependencies then the internal package would have to be added to those dependencies as follows:
 ```java
 @org.springframework.modulith.ApplicationModule(
         allowedDependencies = {"order", "order::order-internal"}
@@ -547,3 +548,22 @@ Spring Modulith will trace each Spring bean method invocation and mark each trac
 In [Zipkin](https://zipkin.io/) UI the traces will look as follows:
 
 ![trace](./trace.png)
+
+### <a name="spring-modulith-vs-java-9-modules"></a>Spring Modulith vs Java 9 Modules
+JDK 9 release introduced [Java 9 Platform Module System (JPMS)](https://www.oracle.com/corporate/features/understanding-java-9-modules.html) which is an attempt to add higher-level modularity in Java projects. Basically, the feature allows to define:
+- a module as a group of packages
+- a module's allowed dependencies
+- a module's exports
+- the services a module consumes/exports
+- which other modules are allowed reflection
+
+It's important to note that all Java 9 modules are private by default so every module which wants to depend on/consume some other modules functionality needs to do so explicitly.
+
+In contrast, Spring Modulith base-level application modules (the direct children of the `main` package) are public by default. Only internal modules must be explicitly exported and optionally explicitly [imported](#explicitly-import-module). In addition, Spring Modulith project architecture rules can be [customized](https://docs.spring.io/spring-modulith/docs/current-SNAPSHOT/reference/html/#fundamentals.customizing-modules) to the needs of a specific project. The main difference of course is that Spring Modulith goes much further than to allow project modularity, rather it offers its vision on how to build Java applications effectively and offers the necessary tools:
+- advocating domain-driven design
+- advocating for event-driven application model and providing the tools to follow this model (both in business logic - including events persistence and testing code)
+- providing self-documenting modules
+- module initialization logic on startup
+
+### <a name="summary"></a>Summary
+I think Spring Modulith is a great attempt at advocating domain-driven design as well as event-driven application model. The project is still experimental however in my opinion it has the potential to become a very useful Spring Boot extension if not its natural evolution. The project offers lots of tools to make developers lives easier like event testing infrastructure and self-documentation among others. Looking forward to see what the future holds for the project.
