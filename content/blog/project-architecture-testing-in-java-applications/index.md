@@ -3,6 +3,7 @@ title: "Project Architecture Testing In Java Applications"
 date: 2023-06-30T11:41:03.284Z
 description: "Project Architecture Testing In Java Applications using ArchUnit and JMolecules"
 tags: "architecture, DDD, archunit, jmolecules"
+excerpt: All of us are familiar with unit/integration/end-to-end testing. There's one more area of testing...
 ---
 
 ![ArchUnit Logo](./archunit_logo.png)
