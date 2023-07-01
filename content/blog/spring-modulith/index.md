@@ -2,7 +2,7 @@
 title: "Introducing Spring Modulith"
 date: 2023-07-01T21:19:03.284Z
 description: "Spring Modulith is a Spring Boot project which focuses on architectural best-practices."
-tags: "java, spring, DDD"
+tags: "java, spring, DDD, event-driven"
 excerpt: Spring Modulith is a Spring Boot project which focuses on architectural best-practices...
 ---
 
